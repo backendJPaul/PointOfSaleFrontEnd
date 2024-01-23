@@ -32,7 +32,7 @@ function findAll(data) {
       nameDiv.classList.add("itemTable");
 
       const editA = document.createElement("a");
-      editA.setAttribute("href","http://google.com");
+      editA.setAttribute("href",`ecategory.html?id=${data[key].id}`);
       editA.textContent = data[key].name;
 
       nameDiv.appendChild(editA);
