@@ -16,7 +16,7 @@ function loadData(data){
 
 
 async function update(data = {}){
-    console.log(data.id);
+    console.log("great idea");
 /*    const response = await fetch(`http://localhost:8080/api/categories/${id}`,{
            method: "PUT",
            headers : {
@@ -34,4 +34,4 @@ async function update(data = {}){
     */
 }
 
-document.getElementById("submitButton").addEventListener("click", update());
+document.getElementById("submitButton").addEventListener("click", update);
