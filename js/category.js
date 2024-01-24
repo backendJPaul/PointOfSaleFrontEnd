@@ -32,7 +32,7 @@ function findAll(data) {
       nameDiv.classList.add("itemTable");
 
       const editA = document.createElement("a");
-      editA.setAttribute("href",`ecategory.html?id=${data[key].id}`);
+      editA.setAttribute("href",`ecategory.html?id=${data[key].id}&operation=update`);
       editA.textContent = data[key].name;
 
       nameDiv.appendChild(editA);
@@ -45,6 +45,11 @@ function findAll(data) {
       deleteSpan.textContent = "delete";
       deleteDiv.appendChild(deleteSpan);
 
+      deleteDiv.addEventListener("click", function(event){
+        deleteItem(data[key].id);
+
+      },false);
+
 
       document.getElementById("containerTable").appendChild(idDiv);
       document.getElementById("containerTable").appendChild(iconDiv);
@@ -55,4 +60,7 @@ function findAll(data) {
 
   }
 
+}
+async function deleteItem(id){
+  const response = fetch(`http://localhost:8080/api/categories/${id}`);
 }

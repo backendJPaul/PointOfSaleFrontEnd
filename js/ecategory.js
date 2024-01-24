@@ -1,6 +1,6 @@
 const urlSearchParams = new URLSearchParams(window.location.search);
 const id = urlSearchParams.get("id");
-
+const operation = urlSearchParams.get("operation");
 let iconCategory = null;
 let nameCategory = null;
 
@@ -14,8 +14,19 @@ async function findById(id) {
         console.log(error)
     }
 }
-
-findById(id);
+switch(operation){
+    case "update" : {
+        console.log("update");
+        document.getElementById("submitButton").addEventListener("click", update);
+        findById(id);
+        break;
+    }
+    case "save" : {
+        console.log("save");
+        document.getElementById("submitButton").addEventListener("click", save);
+        break;
+    }
+}
 
 function loadData(data) {
     document.getElementById("iconText").value = data.icon;
@@ -32,16 +43,11 @@ function loadFields() {
 async function update() {
     loadFields();
 
-    console.log(nameCategory);
-
-
     const data = {
         "id": `${id}`,
         "icon": `${iconCategory}`,
         "name": `${nameCategory}`
     }
-
-    console.log(data);
 
     const response = await fetch(`http://localhost:8080/api/categories/${id}`, {
         method: "PUT",
@@ -51,7 +57,21 @@ async function update() {
         body: JSON.stringify(data)
     }
     );
-
 }
 
-document.getElementById("submitButton").addEventListener("click", update);
+async function save(){
+    loadFields();
+    const data = {
+        "icon" : `${iconCategory}`,
+        "name" : `${nameCategory}`
+    }
+    console.log(data);
+    const response = await fetch(`http://localhost:8080/api/categories`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }
+    );
+}
