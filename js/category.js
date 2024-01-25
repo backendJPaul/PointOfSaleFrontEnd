@@ -14,7 +14,6 @@ loadData();
 function findAll(data) {
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
-      console.log("data" + data[key].name);
 
       const idDiv = document.createElement("div");
       idDiv.classList.add("itemTable");
@@ -27,40 +26,44 @@ function findAll(data) {
       iconSpan.classList.add("material-symbols-outlined");
       iconSpan.textContent = data[key].icon;
       iconDiv.appendChild(iconSpan);
-      
+
       const nameDiv = document.createElement("div");
       nameDiv.classList.add("itemTable");
 
       const editA = document.createElement("a");
-      editA.setAttribute("href",`ecategory.html?id=${data[key].id}&operation=update`);
+      editA.setAttribute("href", `ecategory.html?id=${data[key].id}&operation=update`);
       editA.textContent = data[key].name;
 
       nameDiv.appendChild(editA);
 
       const deleteDiv = document.createElement("div");
       deleteDiv.classList.add("itemTable");
+      deleteDiv.setAttribute("class", "deleteSpan");
 
       const deleteSpan = document.createElement("span");
       deleteSpan.classList.add("material-symbols-outlined");
       deleteSpan.textContent = "delete";
       deleteDiv.appendChild(deleteSpan);
 
-      deleteDiv.addEventListener("click", function(event){
+      deleteDiv.addEventListener("click", function (event) {
         deleteItem(data[key].id);
 
-      },false);
+      }, false);
 
 
       document.getElementById("containerTable").appendChild(idDiv);
       document.getElementById("containerTable").appendChild(iconDiv);
       document.getElementById("containerTable").appendChild(nameDiv);
       document.getElementById("containerTable").appendChild(deleteDiv);
-      
+
     }
 
   }
 
 }
-async function deleteItem(id){
-  const response = fetch(`http://localhost:8080/api/categories/${id}`);
+async function deleteItem(id) {
+  const response = await fetch(`http://localhost:8080/api/categories/${id}`, {
+    method: 'DELETE'
+  });
+  location.reload();
 }

@@ -23,3 +23,6 @@ body{
 .titleTable{
     text-align: center;
 }
+.deleteSpan{
+    cursor: pointer;
+}

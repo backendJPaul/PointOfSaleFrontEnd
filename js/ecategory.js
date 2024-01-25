@@ -1,5 +1,6 @@
 const urlSearchParams = new URLSearchParams(window.location.search);
 const id = urlSearchParams.get("id");
+const redirectRoot = "category.html";
 const operation = urlSearchParams.get("operation");
 let iconCategory = null;
 let nameCategory = null;
@@ -57,6 +58,7 @@ async function update() {
         body: JSON.stringify(data)
     }
     );
+    window.location.href = redirectRoot;
 }
 
 async function save(){
@@ -74,4 +76,5 @@ async function save(){
         body: JSON.stringify(data)
     }
     );
+    window.location.href = redirectRoot;
 }
