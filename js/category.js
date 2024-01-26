@@ -11,6 +11,8 @@ async function loadData() {
 }
 loadData();
 
+
+
 function findAll(data) {
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
