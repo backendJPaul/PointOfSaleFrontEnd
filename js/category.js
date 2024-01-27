@@ -62,7 +62,20 @@ function findAll(data) {
 
   }
 
+  nameSearchText.addEventListener("keyup", function (event){
+    filterData(data,nameSearchText.value);    
+  });
+
 }
+
+function filterData(data, characters){
+  console.log(array.lenght);
+
+ for(var i = 0; i < array.lenght; i ++){
+  console.log(array[i].name); 
+ } 
+}
+
 async function deleteItem(id) {
   const response = await fetch(`http://localhost:8080/api/categories/${id}`, {
     method: 'DELETE'
