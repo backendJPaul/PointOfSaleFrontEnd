@@ -4,19 +4,34 @@ async function loadData() {
     const data = await response.json();
     document.addEventListener("DOMContentLoaded", findAll(data));
 
+
   }
   catch (error) {
     console.log(error);
   }
 }
+
 loadData();
 
 
 
-function findAll(data) {
+function findAll(data, characters) {
+  let nameSearchText = document.getElementById("nameSearchText");
+  nameSearchText.addEventListener("keyup", function (event) {
+    if (characters == null || characters == "") {
+      console.log("findAll");
+    }
+    else {
+      if (nameSearchText.value.includes(characters)) {
+        console.log("yes includes");
+      }
+    }
+
+  });
+
+
   for (const key in data) {
     if (data.hasOwnProperty(key)) {
-
       const idDiv = document.createElement("div");
       idDiv.classList.add("itemTable");
       idDiv.textContent = data[key].id;
@@ -62,18 +77,12 @@ function findAll(data) {
 
   }
 
-  nameSearchText.addEventListener("keyup", function (event){
-    filterData(data,nameSearchText.value);    
-  });
+
 
 }
 
-function filterData(data, characters){
-  console.log(array.lenght);
-
- for(var i = 0; i < array.lenght; i ++){
-  console.log(array[i].name); 
- } 
+function filterData(data, characters) {
+  console.log(data.name);
 }
 
 async function deleteItem(id) {

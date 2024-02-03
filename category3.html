@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category 3.0</title>
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+</head>
+
+<body>
+    <fieldset>
+        <legend>Buscar</legend>
+        <input type="text" id="patternText" />
+        <input type="submit" id="submitButton" />
+    </fieldset>
+    <table width="100%" id="dataTable">
+        <tr>
+            <td>Column 1</td>
+            <td>Column 2</td>
+            <td>Column 3</td>
+            <td>Column 4</td>
+            <td>Column 5</td>
+        </tr>
+    </table>
+
+    <script>
+        loadJSON();
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const filter = Boolean(urlSearchParams.get("filter"));
+        async function loadJSON() {
+            try {
+                const response = await fetch("http://localhost:8080/api/categories");
+                const data = await response.json();
+                document.addEventListener("DOMContentLoaded", domContentLoad(data));
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+        function initComponents() {
+            const dataTable = document.getElementById("dataTable");
+            const patternText = document.getElementById("patternText");
+        }
+        function domContentLoad(data) {
+            initComponents();
+            for (var i in data) {
+                if (JSON.stringify(data[i].name).includes(patternText.value) || filter == false) {
+                    const row = document.createElement("tr");
+
+                    const colId = document.createElement("td");
+                    colId.textContent = data[i].id;
+
+                    const colIcon = document.createElement("td");
+                    const iconSpan = document.createElement("span");
+                    iconSpan.classList.add("material-symbols-outlined");
+                    iconSpan.textContent = data[i].icon;
+                    colIcon.appendChild(iconSpan);
+
+
+                    row.appendChild(colId);
+                    row.appendChild(colIcon);
+
+                    dataTable.appendChild(row);
+                }
+            }
+
+        }
+        console.log(data);
+        
+
+    </script>
+
+</body>
+
+</html>
