@@ -10,73 +10,82 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
     <script>
+        let dataJSON = null;
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const searchBar = urlSearchParams.get("operation");
+
+
         async function loadJSON() {
             try {
                 const response = await fetch("http://localhost:8080/api/categories");
+                dataJSON = response.json();
+                document.addEventListener("DOMContentLoaded", search("e"));
             }
-            catch(error){
+            catch (error) {
                 console.log(error);
             }
         }
 
-
-
         async function search(pattern) {
-            try {
-                const response = await fetch("http://localhost:8080/api/categories");
-                const data = await response.json();
+            console.log("e");
+            if (pattern != null) {
+                try {
+                    dataTable = document.getElementById("dataTable");
 
-                dataTable = document.getElementById("dataTable");
+                    for (var i in dataJSON.JSON) {
+                        console.log("hello world");                        
+                        if (JSON.stringify(dataJSON[i].name).includes(pattern)) {
+                            const row = document.createElement("tr");
 
-                for (var i in data) {
-                    if (JSON.stringify(data[i].name).includes(pattern)) {
-                        const row = document.createElement("tr");
+                            const colId = document.createElement("td");
+                            colId.textContent = dataJSON[i].id;
 
-                        const colId = document.createElement("td");
-                        colId.textContent = data[i].id;
+                            const colIcon = document.createElement("td");
+                            const iconSpan = document.createElement("span");
+                            iconSpan.classList.add("material-symbols-outlined");
+                            iconSpan.textContent = dataJSON[i].icon;
+                            colIcon.appendChild(iconSpan);
 
-                        const colIcon = document.createElement("td");
-                        const iconSpan = document.createElement("span");
-                        iconSpan.classList.add("material-symbols-outlined");
-                        iconSpan.textContent = data[i].icon;
-                        colIcon.appendChild(iconSpan);
+                            const colName = document.createElement("td");
+                            colName.textContent = dataJSON[i].name;
 
-                        const colName = document.createElement("td");
-                        colName.textContent = data[i].name;
+                            const colEdit = document.createElement("td");
+                            const editSpan = document.createElement("span");
+                            editSpan.classList.add("material-symbols-outlined");
+                            editSpan.textContent = dataJSON[i].editField;
+                            colEdit.appendChild(editSpan);
 
-                        const colEdit = document.createElement("td");
-                        const editSpan = document.createElement("span");
-                        editSpan.classList.add("material-symbols-outlined");
-                        editSpan.textContent = data[i].editField;
-                        colEdit.appendChild(editSpan);
+                            const colDelete = document.createElement("td");
 
-                        const colDelete = document.createElement("td");
+                            row.appendChild(colId);
+                            row.appendChild(colIcon);
+                            row.appendChild(colName);
+                            row.appendChild(colEdit);
+                            row.appendChild(colDelete);
 
-                        row.appendChild(colId);
-                        row.appendChild(colIcon);
-                        row.appendChild(colName);
-                        row.appendChild(colEdit);
-                        row.appendChild(colDelete);
+                            console.log(dataJSON[i].name);
+                            dataTable.appendChild(row);
 
-                        console.log(data[i].name);
-                        dataTable.appendChild(row);
-
+                        }
+                        else {
+                            console.log("false");
+                        }
+                        //console.log(data[i].name);
                     }
-                    else {
-                        console.log("false");
-                    }
-                    //console.log(data[i].name);
+                    console.log(dataJSON);
                 }
-                console.log(data);
+                catch (error) {
+                    console.log(error);
+                }
             }
-            catch (error) {
-                console.log(error);
+            else {
+
             }
         } 
     </script>
 </head>
 
-<body onload="search('e')">
+<body onload="loadJSON()">
     <table width="80%" style="text-align: center;" id="dataTable">
         <tr>
             <td>header 1</td>
