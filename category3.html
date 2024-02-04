@@ -48,7 +48,8 @@
         function domContentLoad(data) {
             initComponents();
             for (var i in data) {
-                if (JSON.stringify(data[i].name).includes(patternText.value) || filter == false) {
+
+                if (JSON.stringify(data[i].name).includes(patternText.value) || patternText.value == "") {
                     const row = document.createElement("tr");
 
                     const colId = document.createElement("td");
