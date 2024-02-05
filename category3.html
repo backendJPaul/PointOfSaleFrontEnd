@@ -14,9 +14,9 @@
 <body>
     <fieldset>
         <legend>Buscar</legend>
-        <input type="text" id="patternText" />
+        <input type="text" id="patternText" onkeyup="domContentLoad(dataJSON)" />
         <input type="submit" id="submitButton" />
-    </fieldset>
+    </fieldset>x
     <table width="100%" id="dataTable">
         <tr>
             <td>Column 1</td>
@@ -31,10 +31,12 @@
         loadJSON();
         const urlSearchParams = new URLSearchParams(window.location.search);
         const filter = Boolean(urlSearchParams.get("filter"));
+        let dataJSON = null;
         async function loadJSON() {
             try {
                 const response = await fetch("http://localhost:8080/api/categories");
                 const data = await response.json();
+                dataJSON = data;
                 document.addEventListener("DOMContentLoaded", domContentLoad(data));
             }
             catch (error) {
@@ -50,6 +52,7 @@
             for (var i in data) {
 
                 if (JSON.stringify(data[i].name).includes(patternText.value) || patternText.value == "") {
+                    console.log(patternText.value);
                     const row = document.createElement("tr");
 
                     const colId = document.createElement("td");
@@ -70,7 +73,6 @@
             }
 
         }
-        console.log(data);
         
 
     </script>
