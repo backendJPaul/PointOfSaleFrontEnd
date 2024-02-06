@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecategory</title>
+</head>
+
+<body>
+    <fieldset>
+        <legend id="titleLegend"></legend>
+        <input type="text" id="iconField" placeholder="icono" />
+        <input type="text" id="nameField" placeholder="nombre" />
+        <input type="text" id="editField" placeholder="icono de edicion" />
+        <input type="text" id="updateField" placeholder="icono de eliminacion" />
+        <input type="submit" id="submitButton" />
+    </fieldset>
+
+    <script>
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const id = urlSearchParams.get("id");
+        const titleLegend = document.getElementById("titleLegend");
+
+        document.addEventListener("DOMContentLoaded", domContentLoaded);
+        function domContentLoaded(event) {
+            initComponents();
+        }
+        function initComponents() {
+            if (id == null) {
+                titleLegend.textContent = "Agregar Categoria";
+            }
+            else{
+                titleLegend.textContent = "Actualizar Categoria";
+            }
+
+
+        }
+    </script>
+</body>
+
+</html>
