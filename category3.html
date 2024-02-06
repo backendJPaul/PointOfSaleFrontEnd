@@ -16,7 +16,7 @@
         <legend>Buscar</legend>
         <input type="text" id="patternText" onkeyup="domContentLoad(dataJSON)" />
         <input type="submit" id="submitButton" />
-    </fieldset>x
+    </fieldset>
     <table width="100%" id="dataTable">
         <tr>
             <td>Column 1</td>
@@ -48,11 +48,11 @@
             const patternText = document.getElementById("patternText");
         }
         function domContentLoad(data) {
+            cleanTable();
             initComponents();
             for (var i in data) {
 
                 if (JSON.stringify(data[i].name).includes(patternText.value) || patternText.value == "") {
-                    console.log(patternText.value);
                     const row = document.createElement("tr");
 
                     const colId = document.createElement("td");
@@ -64,16 +64,56 @@
                     iconSpan.textContent = data[i].icon;
                     colIcon.appendChild(iconSpan);
 
+                    const colName = document.createElement("td");
+                    colName.textContent = data[i].name;
+
+
+                    const colEdit = document.createElement("td");
+                    const editSpan = document.createElement("span");
+                    editSpan.classList.add("material-symbols-outlined");
+                    editSpan.textContent = data[i].editField;
+
+                    const editA = document.createElement("a");
+                    editA.setAttribute("href", `ecategory.html?id=${data[i].id}`);
+                    editA.appendChild(editSpan);
+
+                    colEdit.appendChild(editA);
+
+                    const colDelete = document.createElement("td");
+                    const deleteSpan = document.createElement("span");
+                    deleteSpan.classList.add("material-symbols-outlined");
+                    deleteSpan.style = "cursor:mouse";
+                    deleteSpan.textContent = data[i].deleteField;
+
+                    deleteSpan.addEventListener("click", function (event) {
+                        deleteItem(data[i].id);
+
+                    }, false);
+
+                    colDelete.appendChild(deleteSpan);
 
                     row.appendChild(colId);
                     row.appendChild(colIcon);
+                    row.appendChild(colName);
+                    row.appendChild(colEdit);
+                    row.appendChild(colDelete);
 
                     dataTable.appendChild(row);
                 }
             }
 
         }
-        
+        function cleanTable() {
+            dataTable.innerHTML = "";
+        }
+
+
+        async function deleteItem(id) {
+            const response = await fetch(`http://localhost:8080/api/categories/${id}`, {
+                method: 'DELETE'
+            });
+            location.reload();
+        }
 
     </script>
 
