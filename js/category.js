@@ -47,9 +47,9 @@ function findAll(data, characters) {
       const nameDiv = document.createElement("div");
       nameDiv.classList.add("itemTable");
 
-      const editA = document.createElement("a");
-      editA.setAttribute("href", `ecategory.html?id=${data[key].id}&operation=update`);
-      editA.textContent = data[key].name;
+      const edita = document.createelement("a");
+      edita.setattribute("href", `ecategory.html?id=${data[key].id}&operation=update`);
+      edita.textcontent = data[key].name;
 
       nameDiv.appendChild(editA);
 
