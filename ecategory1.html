@@ -18,23 +18,69 @@
     </fieldset>
 
     <script>
+
+        loadJSON();
         const urlSearchParams = new URLSearchParams(window.location.search);
         const id = urlSearchParams.get("id");
-        const titleLegend = document.getElementById("titleLegend");
+        let dataJSON = null;
+        const iconField = null;
+        const nameField = null;
+        const editField = null;
+        const updateField = null;
+
+        async function loadJSON() {
+            try {
+                const response = await fetch("http://localhost:8080/api/categories");
+                const data = await response.json();
+                dataJSON = data;
+                document.addEventListener("DOMContentLoaded", domContentLoad(data));
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+        function domContentLoad(data) {
+            cleanFields();
+            initComponents();
+        }
+        function initComponents() {
+            iconField = document.getElementById("iconField");
+            nameField = document.getElementById("nameField");
+            editField = document.getElementById("editField");
+            updateField = document.getElementById("updateField");
+
+            if (id == null) {
+                titleLegend.textContent = "Agregar Categoria";
+            }
+            else {
+                titleLegend.textContent = "Actualizar Categoria";
+            }
+        }
+
+        function cleanFields() {
+        }
 
         document.addEventListener("DOMContentLoaded", domContentLoaded);
         function domContentLoaded(event) {
             initComponents();
         }
-        function initComponents() {
-            if (id == null) {
-                titleLegend.textContent = "Agregar Categoria";
-            }
-            else{
-                titleLegend.textContent = "Actualizar Categoria";
-            }
 
-
+        async function save() {
+            loadFields();
+            const data = {
+                "icon": `${iconCategory}`,
+                "name": `${nameCategory}`
+            }
+            console.log(data);
+            const response = await fetch(`http://localhost:8080/api/categories`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }
+            );
+            window.location.href = redirectRoot;
         }
     </script>
 </body>
