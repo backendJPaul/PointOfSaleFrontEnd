@@ -52,7 +52,7 @@
             }
             else {
                 titleLegend.textContent = "Actualizar Categoria";
-             }
+            }
             document.getElementById("submitButton").addEventListener("click", save);
         }
         function loadFields() {
@@ -86,11 +86,33 @@
                 }
                 );
             }
-            catch(error){
-                console.log(error);    
+            catch (error) {
+                console.log(error);
             }
             window.location.href = redirectRoot;
         }
+
+        async function update() {
+            loadFields();
+
+            const data = {
+                "id": `${id}`,
+                "icon": `${iconCategory}`,
+                "name": `${nameCategory}`
+            }
+
+            const response = await fetch(`http://localhost:8080/api/categories/${id}`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }
+            );
+            window.location.href = redirectRoot;
+        }
+
+
     </script>
 </body>
 
