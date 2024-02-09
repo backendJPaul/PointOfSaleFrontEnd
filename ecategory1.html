@@ -13,7 +13,7 @@
         <input type="text" id="iconField" placeholder="icono" />
         <input type="text" id="nameField" placeholder="nombre" />
         <input type="text" id="editField" placeholder="icono de edicion" />
-        <input type="text" id="updateField" placeholder="icono de eliminacion" />
+        <input type="text" id="deleteField" placeholder="icono de eliminacion" />
         <input type="submit" id="submitButton" />
     </fieldset>
 
@@ -23,10 +23,11 @@
         const urlSearchParams = new URLSearchParams(window.location.search);
         const id = urlSearchParams.get("id");
         let dataJSON = null;
-        const iconField = null;
-        const nameField = null;
-        const editField = null;
-        const updateField = null;
+        let iconField = null;
+        let nameField = null;
+        let editField = null;
+        let updateField = null;
+        const redirectRoot = "category3.html"
 
         async function loadJSON() {
             try {
@@ -39,47 +40,55 @@
                 console.log(error);
             }
         }
+
         function domContentLoad(data) {
             cleanFields();
             initComponents();
         }
         function initComponents() {
-            iconField = document.getElementById("iconField");
-            nameField = document.getElementById("nameField");
-            editField = document.getElementById("editField");
-            updateField = document.getElementById("updateField");
 
             if (id == null) {
                 titleLegend.textContent = "Agregar Categoria";
             }
             else {
                 titleLegend.textContent = "Actualizar Categoria";
-            }
+             }
+            document.getElementById("submitButton").addEventListener("click", save);
         }
+        function loadFields() {
+            iconField = document.getElementById("iconField").value;
+            console.log(iconField);
+            nameField = document.getElementById("nameField").value;
+            editField = document.getElementById("editField").value;
+            updateField = document.getElementById("deleteField").value;
+        }
+
 
         function cleanFields() {
-        }
-
-        document.addEventListener("DOMContentLoaded", domContentLoaded);
-        function domContentLoaded(event) {
-            initComponents();
         }
 
         async function save() {
             loadFields();
             const data = {
-                "icon": `${iconCategory}`,
-                "name": `${nameCategory}`
+                "icon": `${iconField}`,
+                "name": `${nameField}`,
+                "editField": `${editField}`,
+                "updateField": `${updateField}`
             }
             console.log(data);
-            const response = await fetch(`http://localhost:8080/api/categories`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
+            try {
+                const response = await fetch(`http://localhost:8080/api/categories`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }
+                );
             }
-            );
+            catch(error){
+                console.log(error);    
+            }
             window.location.href = redirectRoot;
         }
     </script>
