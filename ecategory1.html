@@ -23,10 +23,12 @@
         const urlSearchParams = new URLSearchParams(window.location.search);
         const id = urlSearchParams.get("id");
         let dataJSON = null;
+
         let iconField = null;
         let nameField = null;
         let editField = null;
         let updateField = null;
+
         const redirectRoot = "category3.html"
 
         async function loadJSON() {
@@ -49,11 +51,22 @@
 
             if (id == null) {
                 titleLegend.textContent = "Agregar Categoria";
+                document.getElementById("submitButton").addEventListener("click", save);
             }
+                
             else {
                 titleLegend.textContent = "Actualizar Categoria";
+                document.getElementById("submitButton").addEventListener("click", update);
+                for (let i in dataJSON) {
+                    if (dataJSON[i].id == id) {
+
+                        document.getElementById("iconField").value = dataJSON[i].icon;
+                        document.getElementById("nameField").value = dataJSON[i].name;
+                        document.getElementById("editField").value = dataJSON[i].editField;
+                        document.getElementById("deleteField").value = dataJSON[i].deleteField;
+                    }
+                }
             }
-            document.getElementById("submitButton").addEventListener("click", save);
         }
         function loadFields() {
             iconField = document.getElementById("iconField").value;
@@ -93,14 +106,16 @@
         }
 
         async function update() {
-            loadFields();
+            loadFields();   
 
             const data = {
                 "id": `${id}`,
-                "icon": `${iconCategory}`,
-                "name": `${nameCategory}`
+                "icon": `${iconField}`,
+                "name": `${nameField}`,
+                "editField": `${editField}`,
+                "updateField": `${updateField}`
             }
-
+            console.log(id);
             const response = await fetch(`http://localhost:8080/api/categories/${id}`, {
                 method: "PUT",
                 headers: {
