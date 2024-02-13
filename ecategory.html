@@ -3,26 +3,133 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Category</title>
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="css/ecategory.css" />
-    <link rel="stylesheet" type="text/css" href="css/category.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecategory</title>
 </head>
 
-<body on>
+<body>
+    <a href="#" onclick="history.back()">Regresar</a>
+    <fieldset>
+        <legend id="titleLegend"></legend>
+        <input type="text" id="iconField" placeholder="icono" />
+        <input type="text" id="nameField" placeholder="nombre" />
+        <input type="text" id="editField" placeholder="icono de edicion" />
+        <input type="text" id="deleteField" placeholder="icono de eliminacion" />
+        <input type="submit" id="submitButton" />
+    </fieldset>
 
-    <a href="category.html">Regresar</a>
-    <div>
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="iconText" placeholder="Ingrese su icono" required>
-        <input type="text" id="nameText" placeholder="Ingrese su nombre" required>
-        <button type="submit" id="submitButton">Enviar</button>
-    </div>
+    <script>
 
-    <script src="js/ecategory.js" type="module"></script>
+        loadJSON();
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const id = urlSearchParams.get("id");
+        let dataJSON = null;
+
+        let iconField = null;
+        let nameField = null;
+        let editField = null;
+        let updateField = null;
+
+        const redirectRoot = "category.html"
+
+        async function loadJSON() {
+            try {
+                const response = await fetch("http://localhost:8080/api/categories");
+                const data = await response.json();
+                dataJSON = data;
+                document.addEventListener("DOMContentLoaded", domContentLoad(data));
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+
+        function domContentLoad(data) {
+            cleanFields();
+            initComponents();
+        }
+        function initComponents() {
+
+            if (id == null) {
+                titleLegend.textContent = "Agregar Categoria";
+                document.getElementById("submitButton").addEventListener("click", save);
+            }
+                
+            else {
+                titleLegend.textContent = "Actualizar Categoria";
+                document.getElementById("submitButton").addEventListener("click", update);
+                for (let i in dataJSON) {
+                    if (dataJSON[i].id == id) {
+
+                        document.getElementById("iconField").value = dataJSON[i].icon;
+                        document.getElementById("nameField").value = dataJSON[i].name;
+                        document.getElementById("editField").value = dataJSON[i].editField;
+                        document.getElementById("deleteField").value = dataJSON[i].deleteField;
+                    }
+                }
+            }
+        }
+        function loadFields() {
+            iconField = document.getElementById("iconField").value;
+            console.log(iconField);
+            nameField = document.getElementById("nameField").value;
+            editField = document.getElementById("editField").value;
+            updateField = document.getElementById("deleteField").value;
+        }
+
+
+        function cleanFields() {
+        }
+
+        async function save() {
+            loadFields();
+            const data = {
+                "icon": `${iconField}`,
+                "name": `${nameField}`,
+                "editField": `${editField}`,
+                "updateField": `${updateField}`
+            }
+            console.log(data);
+            try {
+                const response = await fetch(`http://localhost:8080/api/categories`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }
+                );
+            }
+            catch (error) {
+                console.log(error);
+            }
+            window.location.href = redirectRoot;
+        }
+
+        async function update() {
+            loadFields();   
+
+            const data = {
+                "id": `${id}`,
+                "icon": `${iconField}`,
+                "name": `${nameField}`,
+                "editField": `${editField}`,
+                "updateField": `${updateField}`
+            }
+            console.log(id);
+            const response = await fetch(`http://localhost:8080/api/categories/${id}`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }
+            );
+            window.location.href = redirectRoot;
+        }
+
+
+    </script>
 </body>
 
 </html>

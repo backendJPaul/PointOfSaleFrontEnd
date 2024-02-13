@@ -12,6 +12,7 @@
 </head>
 
 <body>
+    <a href="#" onclick="history.back()">Regresar</a>
     <fieldset>
         <legend>Buscar</legend>
         <input type="text" id="patternText" onkeyup="domContentLoad(dataJSON)" />
@@ -27,7 +28,7 @@
         </tr>
     </table>
     <div>
-        <a href="ecategory1.html">
+        <a href="ecategory.html">
         Agregar categoria
         <span class="material-symbols-outlined">
             add
@@ -38,10 +39,12 @@
         loadJSON();
         const urlSearchParams = new URLSearchParams(window.location.search);
         const filter = Boolean(urlSearchParams.get("filter"));
+        const serverURL = "http://localhost:8080/api/";
+        const module = "categories";
         let dataJSON = null;
         async function loadJSON() {
             try {
-                const response = await fetch("http://localhost:8080/api/categories");
+                const response = await fetch(serverURL+module);
                 const data = await response.json();
                 dataJSON = data;
                 document.addEventListener("DOMContentLoaded", domContentLoad(data));
@@ -81,7 +84,7 @@
                     editSpan.textContent = data[i].editField;
 
                     const editA = document.createElement("a");
-                    editA.setAttribute("href", `ecategory1.html?id=${data[i].id}`);
+                    editA.setAttribute("href", `ecategory.html?id=${data[i].id}`);
                     editA.appendChild(editSpan);
 
                     colEdit.appendChild(editA);
@@ -114,9 +117,8 @@
             dataTable.innerHTML = "";
         }
 
-
         async function deleteItem(id) {
-            const response = await fetch(`http://localhost:8080/api/categories/${id}`, {
+            const response = await fetch(serverURL + module + `/${id}`, {
                 method: 'DELETE'
             });
             location.reload();
