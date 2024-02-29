@@ -11,10 +11,10 @@
     <a href="#" onclick="history.back()">Regresar</a>
     <fieldset>
         <legend id="titleLegend"></legend>
-        <input type="text" id="iconField" placeholder="icono" />
-        <input type="text" id="nameField" placeholder="nombre" />
-        <input type="text" id="editField" placeholder="icono de edicion" />
-        <input type="text" id="deleteField" placeholder="icono de eliminacion" />
+        <input type="text" id="iconField" placeholder="icono"/>
+        <input type="text" id="nameField" placeholder="nombre"/>
+        <input type="text" id="updateField" placeholder="icono de edicion"/>
+        <input type="text" id="deleteField" placeholder="icono de eliminacion"/>
         <input type="submit" id="submitButton" />
     </fieldset>
 
@@ -27,8 +27,8 @@
 
         let iconField = null;
         let nameField = null;
-        let editField = null;
         let updateField = null;
+        let deleteField = null;
 
         const redirectRoot = "category.html"
 
@@ -63,7 +63,7 @@
 
                         document.getElementById("iconField").value = dataJSON[i].icon;
                         document.getElementById("nameField").value = dataJSON[i].name;
-                        document.getElementById("editField").value = dataJSON[i].editField;
+                        document.getElementById("updateField").value = dataJSON[i].updateField;
                         document.getElementById("deleteField").value = dataJSON[i].deleteField;
                     }
                 }
@@ -73,8 +73,8 @@
             iconField = document.getElementById("iconField").value;
             console.log(iconField);
             nameField = document.getElementById("nameField").value;
-            editField = document.getElementById("editField").value;
-            updateField = document.getElementById("deleteField").value;
+            updateField = document.getElementById("updateField").value;
+            deleteField = document.getElementById("deleteField").value;
         }
 
 
@@ -86,9 +86,10 @@
             const data = {
                 "icon": `${iconField}`,
                 "name": `${nameField}`,
-                "editField": `${editField}`,
-                "updateField": `${updateField}`
+                "updateField": `${updateField}`,
+                "deleteField": `${deleteField}`
             }
+            
             console.log(data);
             try {
                 const response = await fetch(`http://localhost:8080/api/categories`, {
@@ -113,8 +114,8 @@
                 "id": `${id}`,
                 "icon": `${iconField}`,
                 "name": `${nameField}`,
-                "editField": `${editField}`,
-                "updateField": `${updateField}`
+                "updateField": `${updateField}`,
+                "deleteField": `${deleteField}`
             }
             console.log(id);
             const response = await fetch(`http://localhost:8080/api/categories/${id}`, {

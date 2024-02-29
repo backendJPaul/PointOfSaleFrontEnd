@@ -76,16 +76,17 @@
                     colName.textContent = data[i].name;
 
 
-                    const colEdit = document.createElement("td");
-                    const editSpan = document.createElement("span");
-                    editSpan.classList.add("material-symbols-outlined");
-                    editSpan.textContent = data[i].editField;
+                    const colUpdate = document.createElement("td");
+                    const updateSpan = document.createElement("span");
+                    updateSpan.classList.add("material-symbols-outlined");
+                    updateSpan.textContent = data[i].updateField;
 
-                    const editA = document.createElement("a");
-                    editA.setAttribute("href", `ecategory.html?id=${data[i].id}`);
-                    editA.appendChild(editSpan);
 
-                    colEdit.appendChild(editA);
+                    const updateA = document.createElement("a");
+                    updateA.setAttribute("href", `ecategory.html?id=${data[i].id}`);
+                    updateA.appendChild(updateSpan);
+
+                    colUpdate.appendChild(updateA);
 
                     const colDelete = document.createElement("td");
                     const deleteSpan = document.createElement("span");
@@ -103,7 +104,7 @@
                     row.appendChild(colId);
                     row.appendChild(colIcon);
                     row.appendChild(colName);
-                    row.appendChild(colEdit);
+                    row.appendChild(colUpdate);
                     row.appendChild(colDelete);
 
                     dataTable.appendChild(row);
