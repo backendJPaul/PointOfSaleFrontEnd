@@ -34,7 +34,7 @@
 
         async function loadJSON() {
             try {
-                const response = await fetch("http://localhost:8080/api/categories");
+                const response = await fetch("http://localhost:8080/api/category");
                 const data = await response.json();
                 dataJSON = data;
                 document.addEventListener("DOMContentLoaded", domContentLoad(data));
@@ -92,7 +92,7 @@
             
             console.log(data);
             try {
-                const response = await fetch(`http://localhost:8080/api/categories`, {
+                const response = await fetch(`http://localhost:8080/api/category`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -118,7 +118,7 @@
                 "deleteField": `${deleteField}`
             }
             console.log(id);
-            const response = await fetch(`http://localhost:8080/api/categories/${id}`, {
+            const response = await fetch(`http://localhost:8080/api/category/${id}`, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json'

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Category 3.0</title>
+    <title>Enterprise</title>
 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -25,11 +25,12 @@
             <td>Column 3</td>
             <td>Column 4</td>
             <td>Column 5</td>
+            <td>Column 6</td>
         </tr>
     </table>
     <div>
-        <a href="ecategory.html">
-        Agregar categoria
+        <a href="eenterprise.html">
+        Agregar enterprise
         <span class="material-symbols-outlined">
             add
         </span>
@@ -42,7 +43,7 @@
         let dataJSON = null;
         async function loadJSON() {
             try {
-                const response = await fetch("http://localhost:8080/api/category");
+                const response = await fetch("http://localhost:8080/api/enterprise");
                 const data = await response.json();
                 dataJSON = data;
                 document.addEventListener("DOMContentLoaded", domContentLoad(data));
@@ -75,6 +76,9 @@
                     const colName = document.createElement("td");
                     colName.textContent = data[i].name;
 
+                    const colTelephone = document.createElement("td");
+                    colName.textContent = data[i].telephone;
+
 
                     const colUpdate = document.createElement("td");
                     const updateSpan = document.createElement("span");
@@ -83,7 +87,7 @@
 
 
                     const updateA = document.createElement("a");
-                    updateA.setAttribute("href", `ecategory.html?id=${data[i].id}`);
+                    updateA.setAttribute("href", `eenterprise.html?id=${data[i].id}`);
                     updateA.appendChild(updateSpan);
 
                     colUpdate.appendChild(updateA);
@@ -104,6 +108,7 @@
                     row.appendChild(colId);
                     row.appendChild(colIcon);
                     row.appendChild(colName);
+                    row.appendChild(colTelephone);
                     row.appendChild(colUpdate);
                     row.appendChild(colDelete);
 
@@ -118,7 +123,7 @@
 
 
         async function deleteItem(id) {
-            const response = await fetch(`http://localhost:8080/api/category/${id}`, {
+            const response = await fetch(`http://localhost:8080/api/enterprise/${id}`, {
                 method: 'DELETE'
             });
             location.reload();
