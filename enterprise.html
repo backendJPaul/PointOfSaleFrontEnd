@@ -57,6 +57,7 @@
             const patternText = document.getElementById("patternText");
         }
         function domContentLoad(data) {
+            console.log(data);
             cleanTable();
             initComponents();
             for (var i in data) {
@@ -77,7 +78,7 @@
                     colName.textContent = data[i].name;
 
                     const colTelephone = document.createElement("td");
-                    colName.textContent = data[i].telephone;
+                    colTelephone.textContent = data[i].telephone;
 
 
                     const colUpdate = document.createElement("td");
