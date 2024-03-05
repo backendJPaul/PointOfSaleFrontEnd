@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EEnterprise</title>
+    <title>Ecategor</title>
 </head>
 
 <body>
@@ -13,7 +13,6 @@
         <legend id="titleLegend"></legend>
         <input type="text" id="iconField" placeholder="icono"/>
         <input type="text" id="nameField" placeholder="nombre"/>
-        <input type="text" id="telephoneField" placeholder="telefono"/>
         <input type="text" id="updateField" placeholder="icono de edicion"/>
         <input type="text" id="deleteField" placeholder="icono de eliminacion"/>
         <input type="submit" id="submitButton" />
@@ -28,15 +27,14 @@
 
         let iconField = null;
         let nameField = null;
-        let telephoneField = null;
         let updateField = null;
         let deleteField = null;
 
-        const redirectRoot = "enterprise.html"
+        const redirectRoot = "materialtype.html"
 
         async function loadJSON() {
             try {
-                const response = await fetch("http://localhost:8080/api/enterprise");
+                const response = await fetch("http://localhost:8080/api/materialType");
                 const data = await response.json();
                 dataJSON = data;
                 document.addEventListener("DOMContentLoaded", domContentLoad(data));
@@ -53,19 +51,18 @@
         function initComponents() {
 
             if (id == null) {
-                titleLegend.textContent = "Agregar Empresa";
+                titleLegend.textContent = "Agregar MaterialType";
                 document.getElementById("submitButton").addEventListener("click", save);
             }
                 
             else {
-                titleLegend.textContent = "Actualizar Empresa";
+                titleLegend.textContent = "Actualizar MaterialType";
                 document.getElementById("submitButton").addEventListener("click", update);
                 for (let i in dataJSON) {
                     if (dataJSON[i].id == id) {
 
                         document.getElementById("iconField").value = dataJSON[i].icon;
                         document.getElementById("nameField").value = dataJSON[i].name;
-                        document.getElementById("telephoneField").value = dataJSON[i].telephone;
                         document.getElementById("updateField").value = dataJSON[i].updateField;
                         document.getElementById("deleteField").value = dataJSON[i].deleteField;
                     }
@@ -74,8 +71,8 @@
         }
         function loadFields() {
             iconField = document.getElementById("iconField").value;
+            console.log(iconField);
             nameField = document.getElementById("nameField").value;
-            telephoneField = document.getElementById("telephoneField").value;
             updateField = document.getElementById("updateField").value;
             deleteField = document.getElementById("deleteField").value;
         }
@@ -89,14 +86,13 @@
             const data = {
                 "icon": `${iconField}`,
                 "name": `${nameField}`,
-                "telephone": `${telephoneField}`,
                 "updateField": `${updateField}`,
                 "deleteField": `${deleteField}`
             }
             
             console.log(data);
             try {
-                const response = await fetch(`http://localhost:8080/api/enterprise`, {
+                const response = await fetch(`http://localhost:8080/api/materialType`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -118,12 +114,11 @@
                 "id": `${id}`,
                 "icon": `${iconField}`,
                 "name": `${nameField}`,
-                "telephone": `${telephoneField}`,
                 "updateField": `${updateField}`,
                 "deleteField": `${deleteField}`
             }
             console.log(id);
-            const response = await fetch(`http://localhost:8080/api/enterprise/${id}`, {
+            const response = await fetch(`http://localhost:8080/api/materialType/${id}`, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json'
