@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EProduct</title>
+    <title>Document</title>
 </head>
-
-<body>
-    <a href="#" onclick="history.back()">Regresar</a>
+<body onload="initComponents()">
     <fieldset>
         <legend id="titleLegend"></legend>
         <input type="text" id="iconField" placeholder="icono"/>
@@ -30,25 +27,48 @@
         <input type="text" id="deleteField" placeholder="icono de eliminacion"/>
         <input type="submit" id="submitButton" />
     </fieldset>
-
-    <script>
-        loadJSON();
+<script>
         const urlSearchParams = new URLSearchParams(window.location.search);
         const id = urlSearchParams.get("id");
 
-        let dataJSONProduct = null;
-        let dataJSONCategory = null;
-        let dataJSONMaterialType = null;
-
         let iconField = null;
         let nameField = null;
-        let telephoneField = null;
-        let updateField = null;
-        let deleteField = null;
+        let descriptionField = null;
+        let urlImgField = null;
 
-        const redirectRoot = "product.html"
+        function initComponents() {
+            iconField = document.getElementById("iconField");
+            nameField = document.getElementById("nameField");            
+            descriptionField = document.getElementById("descriptionField");
+            urlImgField = document.getElementById("urlImgField");
 
-        async function loadJSON() {
+            egenderSelect = document.getElementById("egenderSelect");
+
+            const egenderJSON = null;           
+            loadJSON();
+
+            if (id == null) {
+                titleLegend.textContent = "Agregar Producto";
+                document.getElementById("submitButton").addEventListener("click", save);
+            }
+                
+            else {
+                titleLegend.textContent = "Actualizar Producto";
+                document.getElementById("submitButton").addEventListener("click", update);
+                
+            }
+            
+
+        }
+        async function loadJSON(){
+            try{
+                const response = await fetch("http://localhost:8080/api/gender");
+                const data = await response.json();
+                egenderJSON = data;
+            }
+            catch(error){
+                console.log(error);
+            }
             try {
                 const response = await fetch("http://localhost:8080/api/product");
                 const data = await response.json();
@@ -79,133 +99,13 @@
             }
         }
 
-        function domContentLoadProduct(data) {
-            cleanFields();
-            initComponents();
-        }
-        function domContentLoadCategory(data){
-            let categorySelect = document.getElementById("categorySelect");
-            const defaultOption = document.createElement("option");
-            defaultOption.text = "Seleccione una Categoría";
-            categorySelect.appendChild(defaultOption);
-            for(let i in dataJSONCategory){
-                const nameOption = document.createElement("option");
-                nameOption.text = dataJSONCategory[i].name;
-                categorySelect.appendChild(nameOption);
-            }
-        }
-        function domContentLoadMaterialType(data){
-            let materialTypeSelect = document.getElementById("materialTypeSelect");
-            const defaultOption = document.createElement("option");
-            defaultOption.text = "Seleccione un material";
-            materialTypeSelect.appendChild(defaultOption);
-            for(let i in dataJSONMaterialType){
-                const nameOption = document.createElement("option");
-                nameOption.text = dataJSONMaterialType[i].name;
-                materialTypeSelect.appendChild(nameOption);
-            }
-        }
-        function initComponents() {
-
-            if (id == null) {
-                titleLegend.textContent = "Agregar Producto";
-                document.getElementById("submitButton").addEventListener("click", save);
-            }
-                
-            else {
-                titleLegend.textContent = "Actualizar Producto";
-                document.getElementById("submitButton").addEventListener("click", update);
-                for (let i in dataJSONProduct) {
-                    if (dataJSONProduct[i].id == id) {
-                        document.getElementById("iconField").value = dataJSONProduct[i].icon;
-                        document.getElementById("nameField").value = dataJSONProduct[i].name;
-                        document.getElementById("descriptionField").value = dataJSONProduct[i].description;
-                        document.getElementById("urlImgField").value = dataJSONProduct[i].urlImg;
-                        document.getElementById("egenderSelect").value = dataJSONProduct[i].egender;
-                        document.getElementById("categorySelect").value = dataJSONProduct[i].category.name;
-                        document.getElementById("updateField").value = dataJSONProduct[i].updateField;
-                        document.getElementById("deleteField").value = dataJSONProduct[i].deleteField;
-                    }
-                }
-            }
-        }
-        function loadFields() {
-            iconField = document.getElementById("iconField").value;
-            nameField = document.getElementById("nameField").value;
-            descriptionField = document.getElementById("descriptionField").value;
-            urlImgField = document.getElementById("urlImgField").value;
-            egenderSelect = document.getElementById("egenderSelect").value;
-            categorySelect = document.getElementById("categorySelect").selectedIndex;
-            materialTypeSelect = document.getElementById("materialTypeSelect").selectedIndex;
-            updateField = document.getElementById("updateField").value;
-            deleteField = document.getElementById("deleteField").value;
-        }
-
-
-        function cleanFields() {
-        }
-
-        async function save() {
-            loadFields();
-            const data = {
-                "icon": `${iconField}`,
-                "name": `${nameField}`,
-                "description": `${descriptionField}`,
-                "urlImg": `${urlImgField}`,
-                "egender" :`${egenderSelect}`,
-                "category" : {
-                    "id" : `${categorySelect}`
-                },
-                "materialType" : {
-                    "id" : `${materialTypeSelect}`
-                }, 
-                "updateField": `${updateField}`,
-                "deleteField": `${deleteField}`
-            }
-            
-        
-            try {
-                const response = await fetch(`http://localhost:8080/api/product`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                }
-                );
-            }
-            catch (error) {
-                console.log(error);
-            }
-            window.location.href = redirectRoot;
+        function update(){
             
         }
 
-        async function update() {
-            loadFields();   
+        function save(){
 
-            const data = {
-                "id": `${id}`,
-                "icon": `${iconField}`,
-                "name": `${nameField}`,
-                "telephone": `${telephoneField}`,
-                "updateField": `${updateField}`,
-                "deleteField": `${deleteField}`
-            }
-            
-            const response = await fetch(`http://localhost:8080/api/product/${id}`, {
-                method: "PUT",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            }
-            );
-            window.location.href = redirectRoot;
         }
-
-
-    </script>
+</script>
 </body>
-
 </html>

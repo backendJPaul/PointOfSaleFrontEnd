@@ -6,13 +6,26 @@
     <title>Document</title>
 </head>
 <body>
+    
     <select id="optionSelect">
-        <option>0001</option>
-        <option>0002</option>
-        <option>0003</option>
+        <option>blusas</option>
+        <option>sueter</option>
+        <option>leggins</option>
+        <option>polos</option>
     </select>
     <script>
         const optionSelect = document.getElementById("optionSelect");
+        optionSelect.value = "0002";
+        getCategory();
+        async function getCategory(){
+            const response = await fetch("http://localhost:8080/api/category");
+            const data = await response.json();
+            document.addEventListener("DOMContentLoaded", set(data));
+        }
+        function set(data){
+            console.log(data);
+            optionSelect.value = data[3].name;    
+        }
     </script>    
 </body>
 </html>
