@@ -12,15 +12,8 @@
         <input type="text" id="nameField" placeholder="nombre"/>
         <input type="text" id="descriptionField" placeholder="description"/>
         <input type="text" id="urlImgField" placeholder="urlImg"/>
-        <select id="egenderSelect">
-            <option value="">Seleccione una opción</option>
-            <option value="AH">Hombre</option>
-            <option value="AM">Mujer</option>
-            <option value="BH">Bebe Niño</option>
-            <option value="BM">Bebe Niña</option>
-            <option value="NH">Niño</option>
-            <option value="NM">Niña</option>
-        </select> 
+        <select id="egenderSelect"></select> 
+
         <select id="categorySelect"></select> 
         <select id="materialTypeSelect"></select> 
         <input type="text" id="updateField" placeholder="icono de edicion"/>
@@ -45,7 +38,7 @@
             egenderSelect = document.getElementById("egenderSelect");
 
             const egenderJSON = null;           
-            loadJSON();
+            egenderLoadJSON();
 
             if (id == null) {
                 titleLegend.textContent = "Agregar Producto";
@@ -60,28 +53,59 @@
             
 
         }
-        async function loadJSON(){
+        function egenderContentLoaded(data){
+            let option = document.createElement("option");
+            option.text = "Seleccione una Categoría";
+            egenderSelect.appendChild(option);
+            console.log(data);
+            for(let i in egenderJSON){
+                option = null;
+                option = document.createElement("option");
+                option.text = egenderJSON[i].name;
+                egenderSelect.appendChild(option);
+            }
+        }
+
+        async function productByIdLoadJSON(id){
             try{
-                const response = await fetch("http://localhost:8080/api/gender");
+                const response = await fetch(`http://localhost:8080/api/product/${id}`);
                 const data = await response.json();
-                egenderJSON = data;
+                productJSON = data;
+                console.log(data);
+
             }
             catch(error){
                 console.log(error);
             }
+
+        }
+        async function egenderLoadJSON(){
+            try{
+                const response = await fetch("http://localhost:8080/api/gender");
+                const data = await response.json();
+                egenderJSON = data;
+                document.addEventListener("DOMContentLoaded", egenderContentLoaded(data));
+            }
+            catch(error){
+                console.log(error);
+            }
+            
+
+            /*
             try {
                 const response = await fetch("http://localhost:8080/api/product");
                 const data = await response.json();
-                dataJSONProduct = data;
+                productJSON = data;
                 document.addEventListener("DOMContentLoaded", domContentLoadProduct(data));
             }
             catch (error) {
                 console.log(error);
             }
+            
             try{
                 const response = await fetch("http://localhost:8080/api/category");
                 const data = await response.json();
-                dataJSONCategory = data;
+                categoryJSON = data;
                 document.addEventListener("DOMContentLoaded", domContentLoadCategory(data));
             }
             catch(error){
@@ -90,16 +114,18 @@
             try{
                 const response = await fetch("http://localhost:8080/api/materialType");
                 const data = await response.json();
-                dataJSONMaterialType = data;
-                console.log(dataJSONMaterialType);
+                materialTypeJSON = data;
                 document.addEventListener("DOMContentLoaded", domContentLoadMaterialType(data));
             }
             catch(error){
                 console.log(error);
             }
+            */
         }
 
         function update(){
+            console.log(id);
+            productByIdLoadJSON(id);
             
         }
 
