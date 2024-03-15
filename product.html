@@ -41,6 +41,7 @@
         </a>
     </div>
     <script>
+        const redirectRoot = "product.html"
         loadJSON();
         const urlSearchParams = new URLSearchParams(window.location.search);
         const filter = Boolean(urlSearchParams.get("filter"));
@@ -144,7 +145,8 @@
 
 
         async function deleteItem(id) {
-            const response = await fetch(`http://localhost:8080/api/enterprise/${id}`, {
+            console.log(id);
+            const response = await fetch(`http://localhost:8080/api/product/${id}`, {
                 method: 'DELETE'
             });
             location.reload();

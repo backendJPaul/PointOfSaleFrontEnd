@@ -8,19 +8,23 @@
 <body onload="initComponents()">
     <fieldset>
         <legend id="titleLegend"></legend>
+       
         <input type="text" id="iconField" placeholder="icono"/>
         <input type="text" id="nameField" placeholder="nombre"/>
         <input type="text" id="descriptionField" placeholder="description"/>
         <input type="text" id="urlImgField" placeholder="urlImg"/>
-        <select id="egenderSelect"></select> 
-
+        
+        <select id="genderSelect"></select> 
         <select id="categorySelect"></select> 
-        <select id="materialTypeSelect"></select> 
+        <select id="materialTypeSelect"></select>
+        
+        
         <input type="text" id="updateField" placeholder="icono de edicion"/>
         <input type="text" id="deleteField" placeholder="icono de eliminacion"/>
         <input type="submit" id="submitButton" />
     </fieldset>
 <script>
+        const redirectRoot = "product.html"
         const urlSearchParams = new URLSearchParams(window.location.search);
         const id = urlSearchParams.get("id");
 
@@ -28,17 +32,31 @@
         let nameField = null;
         let descriptionField = null;
         let urlImgField = null;
+        let egenderSelect = null;
+        let updateField;
+        let deleteField;
 
         function initComponents() {
+            const egenderJSON = null;           
+            const categoryJSON = null;           
+            const materialTypeJSON = null;           
+
             iconField = document.getElementById("iconField");
             nameField = document.getElementById("nameField");            
             descriptionField = document.getElementById("descriptionField");
+
             urlImgField = document.getElementById("urlImgField");
 
             egenderSelect = document.getElementById("egenderSelect");
+            categorySelect = document.getElementById("categorySelect");
 
-            const egenderJSON = null;           
+            updateField = document.getElementById("updateField");
+            deleteField = document.getElementById("deleteField");
+
+
             egenderLoadJSON();
+            categoryLoadJSON();
+            materialTypeLoadJSON();
 
             if (id == null) {
                 titleLegend.textContent = "Agregar Producto";
@@ -53,16 +71,39 @@
             
 
         }
-        function egenderContentLoaded(data){
-            let option = document.createElement("option");
-            option.text = "Seleccione una Categoría";
-            egenderSelect.appendChild(option);
-            console.log(data);
-            for(let i in egenderJSON){
-                option = null;
-                option = document.createElement("option");
-                option.text = egenderJSON[i].name;
-                egenderSelect.appendChild(option);
+        async function egenderLoadJSON(){
+            try{
+                const response = await fetch("http://localhost:8080/api/gender");
+                const data = await response.json();
+                egenderJSON = data;
+                document.addEventListener("DOMContentLoaded", egenderContentLoaded(data));
+            }
+            catch(error){
+                console.log(error);
+            }
+        }
+
+        async function categoryLoadJSON(){
+            try{
+                const response = await fetch("http://localhost:8080/api/category");
+                const data = await response.json();
+                categoryJSON = data;
+                document.addEventListener("DOMContentLoaded", categoryContentLoaded(data));
+            }
+            catch(error){
+                console.log(error);
+            }
+        }
+        
+        async function materialTypeLoadJSON(){
+            try{
+                const response = await fetch("http://localhost:8080/api/materialType");
+                const data = await response.json();
+                materialTypeJSON = data;
+                document.addEventListener("DOMContentLoaded", materialTypeContentLoaded(data));
+            }
+            catch(error){
+                console.log(error);
             }
         }
 
@@ -77,61 +118,109 @@
             catch(error){
                 console.log(error);
             }
-
-        }
-        async function egenderLoadJSON(){
-            try{
-                const response = await fetch("http://localhost:8080/api/gender");
-                const data = await response.json();
-                egenderJSON = data;
-                document.addEventListener("DOMContentLoaded", egenderContentLoaded(data));
-            }
-            catch(error){
-                console.log(error);
-            }
-            
-
-            /*
-            try {
-                const response = await fetch("http://localhost:8080/api/product");
-                const data = await response.json();
-                productJSON = data;
-                document.addEventListener("DOMContentLoaded", domContentLoadProduct(data));
-            }
-            catch (error) {
-                console.log(error);
-            }
-            
-            try{
-                const response = await fetch("http://localhost:8080/api/category");
-                const data = await response.json();
-                categoryJSON = data;
-                document.addEventListener("DOMContentLoaded", domContentLoadCategory(data));
-            }
-            catch(error){
-                console.log(error);
-            }
-            try{
-                const response = await fetch("http://localhost:8080/api/materialType");
-                const data = await response.json();
-                materialTypeJSON = data;
-                document.addEventListener("DOMContentLoaded", domContentLoadMaterialType(data));
-            }
-            catch(error){
-                console.log(error);
-            }
-            */
         }
 
+        function egenderContentLoaded(data){
+            let option = document.createElement("option");
+            option.text = "Seleccione un genero";
+            genderSelect.appendChild(option);
+            
+            for(let i in egenderJSON){
+                option = null;
+                option = document.createElement("option");
+                option.text = egenderJSON[i].name;
+                genderSelect.appendChild(option);
+            }
+        }
+
+        function categoryContentLoaded(data){
+            let option = document.createElement("option");
+            option.text = "Seleccione un categoria";
+            categorySelect.appendChild(option);
+            
+            for(let i in categoryJSON){
+                option = null;
+                option = document.createElement("option");
+                option.text = categoryJSON[i].name;
+                categorySelect.appendChild(option);
+            }
+        }
+
+        function materialTypeContentLoaded(data){
+            let option = document.createElement("option");
+            option.text = "Seleccione un material";
+            materialTypeSelect.appendChild(option);
+            console.log(data);
+            for(let i in materialTypeJSON){
+                option = null;
+                option = document.createElement("option");
+                option.text = materialTypeJSON[i].name;
+                materialTypeSelect.appendChild(option);
+            }
+        }
         function update(){
             console.log(id);
             productByIdLoadJSON(id);
             
         }
 
-        function save(){
 
+        function loadFields() {
+/*
+
+            let iconField = document.getElementById("iconField");
+            let nameField = document.getElementById("nameField");            
+            let descriptionField = document.getElementById("descriptionField");
+
+            let urlImgField = document.getElementById("urlImgField");
+
+            let egenderSelect = document.getElementById("egenderSelect");
+            let categorySelect = document.getElementById("categorySelect");
+
+            let updateField = document.getElementById("updateField");
+            let deleteField = document.getElementById("deleteField");
+*/        
         }
+
+        async function save() {
+            loadFields();
+            const data = {
+                "icon": `${document.getElementById("iconField").value}`,
+                "name": `${document.getElementById("nameField").value}`,
+                "description": `${document.getElementById("descriptionField").value}`,
+                "urlImg": `${document.getElementById("urlImgField").value}`,
+                "gender" : {
+                    "id" : `${document.getElementById("genderSelect").selectedIndex}`,
+                },
+                "category" : {
+                    "id" : `${document.getElementById("categorySelect").selectedIndex}`
+                },
+                "materialType" : {
+                    "id" : `${document.getElementById("materialTypeSelect").selectedIndex}`
+                }, 
+                "updateField": `${document.getElementById("updateField").value}`,
+                "deleteField": `${document.getElementById("deleteField").value}`
+            }
+  
+            
+            try {
+                const response = await fetch(`http://localhost:8080/api/product`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }
+                );
+            }
+            catch (error) {
+                console.log(error);
+            }
+        
+            window.location.href = redirectRoot;
+            
+        }
+
 </script>
 </body>
 </html>
