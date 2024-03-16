@@ -65,7 +65,10 @@
                 
             else {
                 titleLegend.textContent = "Actualizar Producto";
-                document.getElementById("submitButton").addEventListener("click", update);
+                document.addEventListener("DOMContentLoaded", function(){ 
+                    productByIdLoadJSON(id);
+                    document.getElementById("submitButton").addEventListener("click", update);
+                });
                 
             }
             
@@ -112,7 +115,7 @@
                 const response = await fetch(`http://localhost:8080/api/product/${id}`);
                 const data = await response.json();
                 productJSON = data;
-                console.log(data);
+                setFields(data);
 
             }
             catch(error){
@@ -165,25 +168,26 @@
         }
 
 
-        function loadFields() {
-/*
+        function setFields(data) {
+            console.log(data);
 
-            let iconField = document.getElementById("iconField");
-            let nameField = document.getElementById("nameField");            
-            let descriptionField = document.getElementById("descriptionField");
+            document.getElementById("iconField").value = data.icon;
+            document.getElementById("nameField").value = data.name;            
+            document.getElementById("descriptionField").value = data.description;
 
-            let urlImgField = document.getElementById("urlImgField");
+            document.getElementById("urlImgField").value = data.urlImg;
+            console.log(data.gender.id);
 
-            let egenderSelect = document.getElementById("egenderSelect");
-            let categorySelect = document.getElementById("categorySelect");
+            document.getElementById("egenderSelect").selectedIndex = data.gender.id;
+            document.getElementById("categorySelect");
 
-            let updateField = document.getElementById("updateField");
-            let deleteField = document.getElementById("deleteField");
-*/        
+            document.getElementById("updateField");
+            document.getElementById("deleteField");        
         }
+        async function update(){
 
+        }
         async function save() {
-            loadFields();
             const data = {
                 "icon": `${document.getElementById("iconField").value}`,
                 "name": `${document.getElementById("nameField").value}`,

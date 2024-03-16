@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<form>
+  <select id="mySelect">
+    <option id="apple">Apple</option>
+    <option id="orange">Orange</option>
+    <option id="pineapple">Pineapple</option>
+    <option id="banana">Banana</option>
+  </select>
+</form>
+
+<p>Click the button to display the text of the option element with id="orange" in the drop-down list.</p>
+
+<button onload="myFunction()">Try it</button>
+
+<p id="demo"></p>
+
+<script>
+    document.addEventListener("DOMContentLoaded", myFunction());
+function myFunction() {
+    console.log("great");
+    document.getElementById("mySelect").options.seleted = "banana";
+  
+}
+</script>
+
+</body>
+</html>
