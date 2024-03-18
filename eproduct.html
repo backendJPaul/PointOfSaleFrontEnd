@@ -1,29 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body onload="initComponents()">
     <fieldset>
         <legend id="titleLegend"></legend>
-       
-        <input type="text" id="iconField" placeholder="icono"/>
-        <input type="text" id="nameField" placeholder="nombre"/>
-        <input type="text" id="descriptionField" placeholder="description"/>
-        <input type="text" id="urlImgField" placeholder="urlImg"/>
-        
-        <select id="genderSelect"></select> 
-        <select id="categorySelect"></select> 
+
+        <input type="text" id="iconField" placeholder="icono" />
+        <input type="text" id="nameField" placeholder="nombre" />
+        <input type="text" id="descriptionField" placeholder="description" />
+        <input type="text" id="urlImgField" placeholder="urlImg" />
+
+        <select id="genderSelect"></select>
+        <select id="categorySelect"></select>
         <select id="materialTypeSelect"></select>
-        
-        
-        <input type="text" id="updateField" placeholder="icono de edicion"/>
-        <input type="text" id="deleteField" placeholder="icono de eliminacion"/>
+
+
+        <input type="text" id="updateField" placeholder="icono de edicion" />
+        <input type="text" id="deleteField" placeholder="icono de eliminacion" />
         <input type="submit" id="submitButton" />
     </fieldset>
-<script>
+    <script>
         const redirectRoot = "product.html"
         const urlSearchParams = new URLSearchParams(window.location.search);
         const id = urlSearchParams.get("id");
@@ -32,27 +34,26 @@
         let nameField = null;
         let descriptionField = null;
         let urlImgField = null;
-        let egenderSelect = null;
-        let updateField;
-        let deleteField;
+        let genderSelect = null;
+        let categorySelect = null;
+        let materialType = null;
+        let updateField = null;
+        let deleteField = null;
 
         function initComponents() {
-            const egenderJSON = null;           
-            const categoryJSON = null;           
-            const materialTypeJSON = null;           
+            const egenderJSON = null;
+            const categoryJSON = null;
+            const materialTypeJSON = null;
 
             iconField = document.getElementById("iconField");
-            nameField = document.getElementById("nameField");            
+            nameField = document.getElementById("nameField");
             descriptionField = document.getElementById("descriptionField");
-
             urlImgField = document.getElementById("urlImgField");
-
-            egenderSelect = document.getElementById("egenderSelect");
+            genderSelect = document.getElementById("genderSelect");
             categorySelect = document.getElementById("categorySelect");
-
+            materialType = document.getElementById("materialType");
             updateField = document.getElementById("updateField");
             deleteField = document.getElementById("deleteField");
-
 
             egenderLoadJSON();
             categoryLoadJSON();
@@ -62,73 +63,71 @@
                 titleLegend.textContent = "Agregar Producto";
                 document.getElementById("submitButton").addEventListener("click", save);
             }
-                
+
             else {
                 titleLegend.textContent = "Actualizar Producto";
-                document.addEventListener("DOMContentLoaded", function(){ 
-                    productByIdLoadJSON(id);
-                    document.getElementById("submitButton").addEventListener("click", update);
-                });
-                
+                productByIdLoadJSON(id);
+                document.getElementById("submitButton").addEventListener("click", update);
+
             }
-            
+
 
         }
-        async function egenderLoadJSON(){
-            try{
+        async function egenderLoadJSON() {
+            try {
                 const response = await fetch("http://localhost:8080/api/gender");
                 const data = await response.json();
                 egenderJSON = data;
                 document.addEventListener("DOMContentLoaded", egenderContentLoaded(data));
             }
-            catch(error){
+            catch (error) {
                 console.log(error);
             }
         }
 
-        async function categoryLoadJSON(){
-            try{
+        async function categoryLoadJSON() {
+            try {
                 const response = await fetch("http://localhost:8080/api/category");
                 const data = await response.json();
                 categoryJSON = data;
                 document.addEventListener("DOMContentLoaded", categoryContentLoaded(data));
             }
-            catch(error){
+            catch (error) {
                 console.log(error);
             }
         }
-        
-        async function materialTypeLoadJSON(){
-            try{
+
+        async function materialTypeLoadJSON() {
+            try {
                 const response = await fetch("http://localhost:8080/api/materialType");
                 const data = await response.json();
                 materialTypeJSON = data;
                 document.addEventListener("DOMContentLoaded", materialTypeContentLoaded(data));
             }
-            catch(error){
+            catch (error) {
                 console.log(error);
             }
         }
 
-        async function productByIdLoadJSON(id){
-            try{
+        async function productByIdLoadJSON(id) {
+            try {
                 const response = await fetch(`http://localhost:8080/api/product/${id}`);
                 const data = await response.json();
                 productJSON = data;
                 setFields(data);
 
             }
-            catch(error){
+            catch (error) {
                 console.log(error);
             }
         }
 
-        function egenderContentLoaded(data){
+        function egenderContentLoaded(data) {
             let option = document.createElement("option");
             option.text = "Seleccione un genero";
             genderSelect.appendChild(option);
-            
-            for(let i in egenderJSON){
+
+            for (let i in egenderJSON) {
                 option = null;
                 option = document.createElement("option");
                 option.text = egenderJSON[i].name;
@@ -136,12 +135,12 @@
             }
         }
 
-        function categoryContentLoaded(data){
+        function categoryContentLoaded(data) {
             let option = document.createElement("option");
             option.text = "Seleccione un categoria";
             categorySelect.appendChild(option);
-            
-            for(let i in categoryJSON){
+
+            for (let i in categoryJSON) {
                 option = null;
                 option = document.createElement("option");
                 option.text = categoryJSON[i].name;
@@ -149,67 +148,61 @@
             }
         }
 
-        function materialTypeContentLoaded(data){
+        function materialTypeContentLoaded(data) {
             let option = document.createElement("option");
             option.text = "Seleccione un material";
             materialTypeSelect.appendChild(option);
-            console.log(data);
-            for(let i in materialTypeJSON){
+            for (let i in materialTypeJSON) {
                 option = null;
                 option = document.createElement("option");
                 option.text = materialTypeJSON[i].name;
                 materialTypeSelect.appendChild(option);
             }
         }
-        function update(){
+        function update() {
             console.log(id);
             productByIdLoadJSON(id);
-            
+
         }
 
 
         function setFields(data) {
-            console.log(data);
+            iconField.value = data.icon;
+            nameField.value = data.name;
+            descriptionField.value = data.description;
 
-            document.getElementById("iconField").value = data.icon;
-            document.getElementById("nameField").value = data.name;            
-            document.getElementById("descriptionField").value = data.description;
+            urlImgField.value = data.urlImg;
 
-            document.getElementById("urlImgField").value = data.urlImg;
-            console.log(data.gender.id);
+            genderSelect.options[data.gender.id].selected = true;
+            categorySelect.options[data.category.id].selected = true;
+            materialTypeSelect.options[data.materialType.id].selected = true;
 
-            document.getElementById("egenderSelect").selectedIndex = data.gender.id;
-            document.getElementById("categorySelect");
-
-            document.getElementById("updateField");
-            document.getElementById("deleteField");        
-
-//devcom
-
+            updateField.value = data.updateField;
+            deleteField.value = data.deleteField;
         }
-        async function update(){
 
-        }
-        async function save() {
+        async function update() {
+
             const data = {
-                "icon": `${document.getElementById("iconField").value}`,
-                "name": `${document.getElementById("nameField").value}`,
-                "description": `${document.getElementById("descriptionField").value}`,
-                "urlImg": `${document.getElementById("urlImgField").value}`,
-                "gender" : {
-                    "id" : `${document.getElementById("genderSelect").selectedIndex}`,
+                "id": `${id}`,
+                "icon": `${iconField.value}`,
+                "name": `${nameField.value}`,
+                "description": `${descriptionField.value}`,
+                "urlImg": `${urlImgField.value}`,
+                "gender": {
+                    "id": `${genderSelect.selectedIndex}`,
                 },
-                "category" : {
-                    "id" : `${document.getElementById("categorySelect").selectedIndex}`
+                "category": {
+                    "id": `${categorySelect.selectedIndex}`
                 },
-                "materialType" : {
-                    "id" : `${document.getElementById("materialTypeSelect").selectedIndex}`
-                }, 
-                "updateField": `${document.getElementById("updateField").value}`,
-                "deleteField": `${document.getElementById("deleteField").value}`
+                "materialType": {
+                    "id": `${materialTypeSelect.selectedIndex}`
+                },
+                "updateField": `${updateField.value}`,
+                "deleteField": `${deleteField.value}`
             }
-  
-            
+
+
             try {
                 const response = await fetch(`http://localhost:8080/api/product`, {
                     method: 'POST',
@@ -223,11 +216,47 @@
             catch (error) {
                 console.log(error);
             }
-        
             window.location.href = redirectRoot;
-            
+        }
+        async function save() {
+            const data = {
+                "icon": `${document.getElementById("iconField").value}`,
+                "name": `${document.getElementById("nameField").value}`,
+                "description": `${document.getElementById("descriptionField").value}`,
+                "urlImg": `${document.getElementById("urlImgField").value}`,
+                "gender": {
+                    "id": `${document.getElementById("genderSelect").selectedIndex}`,
+                },
+                "category": {
+                    "id": `${document.getElementById("categorySelect").selectedIndex}`
+                },
+                "materialType": {
+                    "id": `${document.getElementById("materialTypeSelect").selectedIndex}`
+                },
+                "updateField": `${document.getElementById("updateField").value}`,
+                "deleteField": `${document.getElementById("deleteField").value}`
+            }
+
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/product`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }
+                );
+            }
+            catch (error) {
+                console.log(error);
+            }
+
+            window.location.href = redirectRoot;
+
         }
 
-</script>
+    </script>
 </body>
+
 </html>
