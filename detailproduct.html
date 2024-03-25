@@ -33,7 +33,7 @@
         </tr>
     </table>
     <div>
-        <a href="eproduct.html">
+        <a href="edetailProduct.html">
         Agregar Product
         <span class="material-symbols-outlined">
             add
@@ -41,7 +41,7 @@
         </a>
     </div>
     <script>
-        const redirectRoot = "product.html"
+        const redirectRoot = "detailProduct.html"
         loadJSON();
         const urlSearchParams = new URLSearchParams(window.location.search);
         const filter = Boolean(urlSearchParams.get("filter"));
@@ -49,7 +49,7 @@
         
         async function loadJSON() {
             try {
-                const response = await fetch("http://localhost:8080/api/product");
+                const response = await fetch("http://localhost:8080/api/detailProduct");
                 const data = await response.json();
                 dataJSON = data;
                 document.addEventListener("DOMContentLoaded", domContentLoad(data));
