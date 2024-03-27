@@ -119,41 +119,12 @@
                     deleteSpan.classList.add("material-symbols-outlined");
                     deleteSpan.style = "cursor:mouse";
                     deleteSpan.textContent = data[i].deleteField;
-
                     deleteSpan.addEventListener("click", function (event) {
                         deleteItem(data[i].id);
 
                     }, false);
-
                     colDelete.appendChild(deleteSpan);
-
-                    /*
-
-
-
-                    const colUrlImg = document.createElement("td");
-                    colUrlImg.textContent = data[i].urlImg;
-
-                    const colEGender = document.createElement("td");
-                    colEGender.textContent = data[i].egender;
-
-                    const colCategory = document.createElement("td");
-                    colCategory.textContent = data[i].category.name;
-
-                    const colMaterialType = document.createElement("td");
-                    colMaterialType.textContent = data[i].materialType.name;
-
-
-
-
-                    row.appendChild(colName);
-                    row.appendChild(colUrlImg);
-                    row.appendChild(colEGender);
-                    row.appendChild(colCategory);
-                    row.appendChild(colMaterialType);
-
-*/
-
+                    
                     row.appendChild(colId);
                     row.appendChild(colIcon);
                     row.appendChild(colDescription);
@@ -169,13 +140,10 @@
                     dataTable.appendChild(row);
                 }
             }
-
         }
         function cleanTable() {
             dataTable.innerHTML = "";
         }
-
-
         async function deleteItem(id) {
             console.log(id);
             const response = await fetch(`http://localhost:8080/api/productDetail/${id}`, {
@@ -185,7 +153,5 @@
         }
 
     </script>
-
 </body>
-
 </html>
