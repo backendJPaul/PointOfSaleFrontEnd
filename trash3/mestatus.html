@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status</title>
+</head>
+
+<body>
+    <a href="#" onclick="history.back()">Regresar</a>
+    <fieldset>
+        <legend id="titleLegend"></legend>
+        <input type="text" id="iconField" placeholder="icono"/>
+        <input type="text" id="nameField" placeholder="nombre"/>
+        <input type="text" id="updateField" placeholder="icono de edicion"/>
+        <input type="text" id="deleteField" placeholder="icono de eliminacion"/>
+        <input type="submit" id="submitButton" />
+    </fieldset>
+
+    <script>
+
+        loadJSON();
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const id = urlSearchParams.get("id");
+        let dataJSON = null;
+
+        let iconField = null;
+        let nameField = null;
+        let updateField = null;
+        let deleteField = null;
+
+        const redirectRoot = "msize.html"
+
+        async function loadJSON() {
+            try {
+                const response = await fetch("http://localhost:8080/api/size");
+                const data = await response.json();
+                dataJSON = data;
+                document.addEventListener("DOMContentLoaded", domContentLoad(data));
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+
+        function domContentLoad(data) {
+            cleanFields();
+            initComponents();
+        }
+        function initComponents() {
+
+            if (id == null) {
+                titleLegend.textContent = "Agregar Status";
+                document.getElementById("submitButton").addEventListener("click", save);
+            }
+                
+            else {
+                titleLegend.textContent = "Actualizar Status";
+                document.getElementById("submitButton").addEventListener("click", update);
+                for (let i in dataJSON) {
+                    if (dataJSON[i].id == id) {
+
+                        document.getElementById("iconField").value = dataJSON[i].icon;
+                        document.getElementById("nameField").value = dataJSON[i].name;
+                        document.getElementById("updateField").value = dataJSON[i].updateField;
+                        document.getElementById("deleteField").value = dataJSON[i].deleteField;
+                    }
+                }
+            }
+        }
+        function loadFields() {
+            iconField = document.getElementById("iconField").value;
+            console.log(iconField);
+            nameField = document.getElementById("nameField").value;
+            updateField = document.getElementById("updateField").value;
+            deleteField = document.getElementById("deleteField").value;
+        }
+
+
+        function cleanFields() {
+        }
+
+        async function save() {
+            loadFields();
+            const data = {
+                "icon": `${iconField}`,
+                "name": `${nameField}`,
+                "updateField": `${updateField}`,
+                "deleteField": `${deleteField}`
+            }
+            
+            console.log(data);
+            try {
+                const response = await fetch(`http://localhost:8080/api/size`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }
+                );
+            }
+            catch (error) {
+                console.log(error);
+            }
+            window.location.href = redirectRoot;
+        }
+
+        async function update() {
+            loadFields();   
+
+            const data = {
+                "id": `${id}`,
+                "icon": `${iconField}`,
+                "name": `${nameField}`,
+                "updateField": `${updateField}`,
+                "deleteField": `${deleteField}`
+            }
+            console.log(id);
+            const response = await fetch(`http://localhost:8080/api/size/${id}`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }
+            );
+            window.location.href = redirectRoot;
+        }
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSize</title>
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+</head>
+
+<body>
+    <a href="#" onclick="history.back()">Regresar</a>
+    <fieldset>
+        <legend>Buscar</legend>
+        <input type="text" id="patternText" onkeyup="domContentLoad(dataJSON)" />
+        <input type="submit" id="submitButton" />
+    </fieldset>
+    <table width="100%" id="dataTable">
+        <tr>
+            <td>Column 1</td>
+            <td>Column 2</td>
+            <td>Column 3</td>
+            <td>Column 4</td>
+            <td>Column 5</td>
+        </tr>
+    </table>
+    <div>
+        <a href="mesize.html">
+        Agregar Size
+        <span class="material-symbols-outlined">
+            add
+        </span>
+        </a>
+    </div>
+    <script>
+        loadJSON();
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const filter = Boolean(urlSearchParams.get("filter"));
+        let dataJSON = null;
+        async function loadJSON() {
+            try {
+                const response = await fetch("http://localhost:8080/api/size");
+                const data = await response.json();
+                dataJSON = data;
+                document.addEventListener("DOMContentLoaded", domContentLoad(data));
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+        function initComponents() {
+            const dataTable = document.getElementById("dataTable");
+            const patternText = document.getElementById("patternText");
+        }
+        function domContentLoad(data) {
+            cleanTable();
+            initComponents();
+            for (var i in data) {
+
+                if (JSON.stringify(data[i].name).includes(patternText.value) || patternText.value == "") {
+                    const row = document.createElement("tr");
+
+                    const colId = document.createElement("td");
+                    colId.textContent = data[i].id;
+
+                    const colIcon = document.createElement("td");
+                    const iconSpan = document.createElement("span");
+                    iconSpan.classList.add("material-symbols-outlined");
+                    iconSpan.textContent = data[i].icon;
+                    colIcon.appendChild(iconSpan);
+
+                    const colName = document.createElement("td");
+                    colName.textContent = data[i].name;
+
+
+                    const colUpdate = document.createElement("td");
+                    const updateSpan = document.createElement("span");
+                    updateSpan.classList.add("material-symbols-outlined");
+                    updateSpan.textContent = data[i].updateField;
+
+
+                    const updateA = document.createElement("a");
+                    updateA.setAttribute("href", `mesize.html?id=${data[i].id}`);
+                    updateA.appendChild(updateSpan);
+
+                    colUpdate.appendChild(updateA);
+
+                    const colDelete = document.createElement("td");
+                    const deleteSpan = document.createElement("span");
+                    deleteSpan.classList.add("material-symbols-outlined");
+                    deleteSpan.style = "cursor:pointer";
+                    deleteSpan.textContent = data[i].deleteField;
+
+                    deleteSpan.addEventListener("click", function (event) {
+                        deleteItem(data[i].id);
+
+                    }, false);
+
+                    colDelete.appendChild(deleteSpan);
+
+                    row.appendChild(colId);
+                    row.appendChild(colIcon);
+                    row.appendChild(colName);
+                    row.appendChild(colUpdate);
+                    row.appendChild(colDelete);
+
+                    dataTable.appendChild(row);
+                }
+            }
+
+        }
+        function cleanTable() {
+            dataTable.innerHTML = "";
+        }
+
+
+        async function deleteItem(id){
+            console.log(id);
+            const response = await fetch(`http://localhost:8080/api/size/${id}`, {
+                method: 'DELETE'
+            });
+            location.reload();
+        }
+
+    </script>
+
+</body>
+
+</html>
