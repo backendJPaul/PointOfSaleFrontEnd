@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSize</title>
+    <title>MEnterprise</title>
 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -29,7 +29,7 @@
     </table>
     <div>
         <a id="addA">
-        Agregar Talla
+        Agregar Empresa
         <span class="material-symbols-outlined">
             add
         </span>
@@ -39,9 +39,9 @@
         const urlSearchParams = new URLSearchParams(window.location.search);
         const filter = Boolean(urlSearchParams.get("filter"));
 
-        const api = "size";
-        const module = "msize.html";
-        const moduleEdit = "mesize.html";
+        const api = "enterprise";
+        const module = "enterprise.html";
+        const moduleEdit = "meenterprise.html";
 
         loadJSON();
 
@@ -83,6 +83,8 @@
                     const colName = document.createElement("td");
                     colName.textContent = data[i].name;
 
+                    const colTelephone = document.createElement("td");
+                    colTelephone.textContent = data[i].telephone;
 
                     const colUpdate = document.createElement("td");
                     const updateSpan = document.createElement("span");
@@ -112,6 +114,7 @@
                     row.appendChild(colId);
                     row.appendChild(colIcon);
                     row.appendChild(colName);
+                    row.appendChild(colTelephone);
                     row.appendChild(colUpdate);
                     row.appendChild(colDelete);
 

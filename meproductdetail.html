@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProductDetail</title>
+</head>
+
+<body onload="initComponents()">
+    <fieldset>
+        <legend id="titleLegend"></legend>
+
+        <input type="text" id="iconField" placeholder="icono" />
+        <input type="text" id="descriptionField" placeholder="Descripción" />
+        <input type="text" id="purchasePrice" placeholder="Precio de compra"/>
+        <input type="text" id="salePrice" placeholder="Precio de venta"/>
+        <input type="text" id="stock" placeholder="Stock"/>
+        <input type="text" id="urlImgField" placeholder="urlImg" />
+
+        <select id="colorSelect"></select>
+        <select id="sizeSelect"></select>
+        <select id="statusSelect"></select>
+        <select id="productSelect"></select>
+
+
+        <input type="text" id="updateField" placeholder="icono de edicion" />
+        <input type="text" id="deleteField" placeholder="icono de eliminacion" />
+        <input type="submit" id="submitButton" />
+    </fieldset>
+
+<script>
+        const redirectRoot = "mproductdetail.html"
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const id = urlSearchParams.get("id");
+
+        let iconField = null;
+        let nameField = null;
+        let descriptionField = null;
+        let urlImgField = null;
+        
+        let colorSelect = null;
+        let sizeSelect = null;
+        let statusSelect = null;
+        let productSelect = null;
+
+        let updateField = null;
+        let deleteField = null;
+
+        function initComponents() {
+
+            const colorJSON = null;
+            const sizeJSON = null;
+            const statusJSON = null;
+            const productJSON = null;
+
+            iconField = document.getElementById("iconField");
+            nameField = document.getElementById("nameField");
+            descriptionField = document.getElementById("descriptionField");
+            urlImgField = document.getElementById("urlImgField");
+
+            colorSelect = document.getElementById("colorSelect");
+            sizeSelect = document.getElementById("sizeSelect");
+            statusSelect = document.getElementById("statusSelect");
+            productSelect = document.getElementById("productSelect"); 
+
+            updateField = document.getElementById("updateField");
+            deleteField = document.getElementById("deleteField");
+
+            colorLoadJSON();
+            sizeLoadJSON();
+            statusLoadJSON();
+            productLoadJSON();
+
+            if (id == null) {
+                titleLegend.textContent = "Agregar Detalle Producto";
+                document.getElementById("submitButton").addEventListener("click", save);
+            }
+
+            else {
+                titleLegend.textContent = "Actualizar Detalle Producto";
+                productByIdLoadJSON(id);
+                document.getElementById("submitButton").addEventListener("click", update);
+
+            }
+
+
+        }
+        async function colorLoadJSON() {
+            try {
+                const response = await fetch("http://localhost:8080/api/color");
+                const data = await response.json();
+                colorJSON = data;
+                document.addEventListener("DOMContentLoaded", colorContentLoaded(data));
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+
+        async function sizeLoadJSON() {
+            try {
+                const response = await fetch("http://localhost:8080/api/size");
+                const data = await response.json();
+                sizeJSON = data;
+                document.addEventListener("DOMContentLoaded", sizeContentLoaded(data));
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+
+        async function statusLoadJSON() {
+            try {
+                const response = await fetch("http://localhost:8080/api/status");
+                const data = await response.json();
+                statusJSON = data;
+                document.addEventListener("DOMContentLoaded", statusContentLoaded(data));
+
+                
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+
+        async function productLoadJSON(id) {
+            try {
+                const response = await fetch(`http://localhost:8080/api/product/`);
+                const data = await response.json();
+                productJSON = data;
+                document.addEventListener("DOMContentLoaded", productContentLoaded(data));
+                //setFields(data);
+
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+
+    
+
+        function colorContentLoaded(data) {
+            console.log(data);
+            let option = document.createElement("option");
+            option.text = "Seleccione un color";
+            colorSelect.appendChild(option);
+
+            for (let i in colorJSON) {
+                option = null;
+                option = document.createElement("option");
+                option.text = colorJSON[i].name;
+                colorSelect.appendChild(option);
+            }
+        }
+
+        function sizeContentLoaded(data) {
+            let option = document.createElement("option");
+            option.text = "Seleccione una talla";
+            sizeSelect.appendChild(option);
+
+            for (let i in sizeJSON) {
+                option = null;
+                option = document.createElement("option");
+                option.text = sizeJSON[i].name;
+                sizeSelect.appendChild(option);
+            }
+        }
+
+        function statusContentLoaded(data) {
+            let option = document.createElement("option");
+            option.text = "Seleccione un status";
+            statusSelect.appendChild(option);
+            for (let i in statusJSON) {
+                option = null;
+                option = document.createElement("option");
+                option.text = statusJSON[i].name;
+                statusSelect.appendChild(option);
+            }
+        }
+        function productContentLoaded(data){
+            let option = document.createElement("option");
+            option.text = "Seleccione un producto";
+            productSelect.appendChild(option);
+            for (let i in productJSON) {
+                option = null;
+                option = document.createElement("option");
+                option.text = productJSON[i].name;
+                productSelect.appendChild(option);
+            }
+        }
+        function update() {
+            console.log(id);
+            productByIdLoadJSON(id);
+
+        }
+
+
+        function setFields(data) {
+            iconField.value = data.icon;
+            nameField.value = data.name;
+            descriptionField.value = data.description;
+
+            urlImgField.value = data.urlImg;
+
+            genderSelect.options[data.gender.id].selected = true;
+            categorySelect.options[data.category.id].selected = true;
+            materialTypeSelect.options[data.materialType.id].selected = true;
+
+            updateField.value = data.updateField;
+            deleteField.value = data.deleteField;
+        }
+
+        async function update() {
+
+            const data = {
+                "id": `${id}`,
+                "icon": `${iconField.value}`,
+                "name": `${nameField.value}`,
+                "description": `${descriptionField.value}`,
+                "urlImg": `${urlImgField.value}`,
+                "gender": {
+                    "id": `${genderSelect.selectedIndex}`,
+                },
+                "category": {
+                    "id": `${categorySelect.selectedIndex}`
+                },
+                "materialType": {
+                    "id": `${materialTypeSelect.selectedIndex}`
+                },
+                "updateField": `${updateField.value}`,
+                "deleteField": `${deleteField.value}`
+            }
+
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/product`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }
+                );
+            }
+            catch (error) {
+                console.log(error);
+            }           
+            window.location.href = redirectRoot;
+        }
+        async function save() {
+            const data = {
+                "icon": `${document.getElementById("iconField").value}`,
+                "name": `${document.getElementById("nameField").value}`,
+                "description": `${document.getElementById("descriptionField").value}`,
+                "urlImg": `${document.getElementById("urlImgField").value}`,
+                "gender": {
+                    "id": `${document.getElementById("genderSelect").selectedIndex}`,
+                },
+                "category": {
+                    "id": `${document.getElementById("categorySelect").selectedIndex}`
+                },
+                "materialType": {
+                    "id": `${document.getElementById("materialTypeSelect").selectedIndex}`
+                },
+                "updateField": `${document.getElementById("updateField").value}`,
+                "deleteField": `${document.getElementById("deleteField").value}`
+            }
+
+
+            try {
+                const response = await fetch(`http://localhost:8080/api/product`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }
+                );
+            }
+            catch (error) {
+                console.log(error);
+            }
+
+            window.location.href = redirectRoot;
+
+        }
+
+    </script>
+</body>
+
+</html>

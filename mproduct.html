@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSize</title>
+    <title>MProduct</title>
 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -20,16 +20,21 @@
     </fieldset>
     <table width="100%" id="dataTable">
         <tr>
-            <td>Column 1</td>
-            <td>Column 2</td>
-            <td>Column 3</td>
-            <td>Column 4</td>
-            <td>Column 5</td>
+            <td>Column Id</td>
+            <td>Column Icon</td>
+            <td>Column Name</td>
+            <td>Column Description</td>
+            <td>Column urlImg</td>
+            <td>Column eGender</td>
+            <td>Column Id Category</td>
+            <td>Column Id MaterialType</td>
+            <td>Column Icon Update</td>
+            <td>Column Icon Delete</td>
         </tr>
     </table>
     <div>
         <a id="addA">
-        Agregar Talla
+        Agregar Producto
         <span class="material-symbols-outlined">
             add
         </span>
@@ -39,9 +44,9 @@
         const urlSearchParams = new URLSearchParams(window.location.search);
         const filter = Boolean(urlSearchParams.get("filter"));
 
-        const api = "size";
-        const module = "msize.html";
-        const moduleEdit = "mesize.html";
+        const api = "product";
+        const module = "mproduct.html";
+        const moduleEdit = "meproduct.html";
 
         loadJSON();
 
@@ -83,11 +88,26 @@
                     const colName = document.createElement("td");
                     colName.textContent = data[i].name;
 
+                    const colDescription = document.createElement("td");
+                    colDescription.textContent = data[i].description;
+
+                    const colUrlImg = document.createElement("td");
+                    colUrlImg.textContent = data[i].urlImg;
+
+                    const colEGender = document.createElement("td");
+                    colEGender.textContent = data[i].egender;
+
+                    const colCategory = document.createElement("td");
+                    colCategory.textContent = data[i].category.name;
+
+                    const colMaterialType = document.createElement("td");
+                    colMaterialType.textContent = data[i].materialType.name;
 
                     const colUpdate = document.createElement("td");
                     const updateSpan = document.createElement("span");
                     updateSpan.classList.add("material-symbols-outlined");
                     updateSpan.textContent = data[i].updateField;
+
 
 
                     const updateA = document.createElement("a");
@@ -112,6 +132,11 @@
                     row.appendChild(colId);
                     row.appendChild(colIcon);
                     row.appendChild(colName);
+                    row.appendChild(colDescription);
+                    row.appendChild(colUrlImg);
+                    row.appendChild(colEGender);
+                    row.appendChild(colCategory);
+                    row.appendChild(colMaterialType);
                     row.appendChild(colUpdate);
                     row.appendChild(colDelete);
 

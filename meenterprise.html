@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MESize</title>
+    <title>MEEnterprise</title>
 </head>
 
 <body>
@@ -13,6 +13,7 @@
         <legend id="titleLegend"></legend>
         <input type="text" id="iconField" placeholder="icono"/>
         <input type="text" id="nameField" placeholder="nombre"/>
+        <input type="text" id="telephoneField" placeholder="telefono"/>
         <input type="text" id="updateField" placeholder="icono de edicion"/>
         <input type="text" id="deleteField" placeholder="icono de eliminacion"/>
         <input type="submit" id="submitButton" />
@@ -23,14 +24,16 @@
         const urlSearchParams = new URLSearchParams(window.location.search);
         const id = urlSearchParams.get("id");
 
-        const api = "size";
-        const module = "msize.html";
-        const moduleEdit = "mesize.html";
-        const nameModule = "Talla";
+        const api = "enterprise";
+        const module = "menterprise.html";
+        const moduleEdit = "meenterprise.html";
+        const nameModule = "Empresa";
         
         let dataJSON = null;
+
         let iconField = null;
         let nameField = null;
+        let telephoneField = null;
         let updateField = null;
         let deleteField = null;
 
@@ -67,6 +70,7 @@
 
                         document.getElementById("iconField").value = dataJSON[i].icon;
                         document.getElementById("nameField").value = dataJSON[i].name;
+                        document.getElementById("telephoneField").value = dataJSON[i].telephone;
                         document.getElementById("updateField").value = dataJSON[i].updateField;
                         document.getElementById("deleteField").value = dataJSON[i].deleteField;
                     }
@@ -75,10 +79,11 @@
         }
         function loadFields() {
             iconField = document.getElementById("iconField").value;
-            console.log(iconField);
             nameField = document.getElementById("nameField").value;
+            telephoneField = document.getElementById("telephoneField").value;
             updateField = document.getElementById("updateField").value;
             deleteField = document.getElementById("deleteField").value;
+            
         }
 
 
@@ -90,6 +95,7 @@
             const data = {
                 "icon": `${iconField}`,
                 "name": `${nameField}`,
+                "telephone": `${telephoneField}`,
                 "updateField": `${updateField}`,
                 "deleteField": `${deleteField}`
             }
@@ -113,11 +119,11 @@
 
         async function update() {
             loadFields();   
-
             const data = {
                 "id": `${id}`,
                 "icon": `${iconField}`,
                 "name": `${nameField}`,
+                "telephone": `${telephoneField}`,
                 "updateField": `${updateField}`,
                 "deleteField": `${deleteField}`
             }

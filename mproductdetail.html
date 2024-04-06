@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MSize</title>
+    <title>Product</title>
 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -20,37 +20,36 @@
     </fieldset>
     <table width="100%" id="dataTable">
         <tr>
-            <td>Column 1</td>
-            <td>Column 2</td>
-            <td>Column 3</td>
-            <td>Column 4</td>
-            <td>Column 5</td>
+            <td>Column Id</td>
+            <td>Column Icon</td>
+            <td>Column Name</td>
+            <td>Column Description</td>
+            <td>Column urlImg</td>
+            <td>Column eGender</td>
+            <td>Column Id Category</td>
+            <td>Column Id MaterialType</td>
+            <td>Column Icon Update</td>
+            <td>Column Icon Delete</td>
         </tr>
     </table>
     <div>
-        <a id="addA">
-        Agregar Talla
+        <a href="meproductdetail.html">
+        Agregar Detalle de Producto
         <span class="material-symbols-outlined">
             add
         </span>
         </a>
     </div>
     <script>
+        const redirectRoot = "mproductdetail.html"
+        loadJSON();
         const urlSearchParams = new URLSearchParams(window.location.search);
         const filter = Boolean(urlSearchParams.get("filter"));
-
-        const api = "size";
-        const module = "msize.html";
-        const moduleEdit = "mesize.html";
-
-        loadJSON();
-
         let dataJSON = null;
-        let aLink = document.getElementById("addA");
-        aLink.href = moduleEdit;
+        
         async function loadJSON() {
             try {
-                const response = await fetch(`http://localhost:8080/api/${api}`);
+                const response = await fetch("http://localhost:8080/api/productDetail/search/2");
                 const data = await response.json();
                 dataJSON = data;
                 document.addEventListener("DOMContentLoaded", domContentLoad(data));
@@ -64,78 +63,96 @@
             const patternText = document.getElementById("patternText");
         }
         function domContentLoad(data) {
+            console.log(data);
             cleanTable();
             initComponents();
             for (var i in data) {
 
-                if (JSON.stringify(data[i].name).includes(patternText.value) || patternText.value == "") {
+                if (JSON.stringify(data[i].description).includes(patternText.value) || patternText.value == "") {
+                    
+                    console.log(data);
+                    
                     const row = document.createElement("tr");
-
                     const colId = document.createElement("td");
                     colId.textContent = data[i].id;
-
+                   
                     const colIcon = document.createElement("td");
                     const iconSpan = document.createElement("span");
                     iconSpan.classList.add("material-symbols-outlined");
                     iconSpan.textContent = data[i].icon;
                     colIcon.appendChild(iconSpan);
 
-                    const colName = document.createElement("td");
-                    colName.textContent = data[i].name;
+                    const colDescription = document.createElement("td");
+                    colDescription.textContent = data[i].description;
+
+                    const colPurchasePrice = document.createElement("td");
+                    colPurchasePrice.textContent = data[i].purchasePrice;
+
+                    const colSalePrice = document.createElement("td");
+                    colSalePrice.textContent = data[i].salePrice;
+
+                    const colStock = document.createElement("td");
+                    colStock.textContent = data[i].stock;
+
+                    const colColor = document.createElement("td");
+                    colColor.textContent = data[i].color.name;
+
+                    const colSize = document.createElement("td");
+                    colSize.textContent = data[i].size.name;
+
+                    const colStatus = document.createElement("td");
+                    colStatus.textContent = data[i].status.name;
 
 
                     const colUpdate = document.createElement("td");
                     const updateSpan = document.createElement("span");
                     updateSpan.classList.add("material-symbols-outlined");
                     updateSpan.textContent = data[i].updateField;
-
-
+                    
                     const updateA = document.createElement("a");
-                    updateA.setAttribute("href", `${moduleEdit}?id=${data[i].id}`);
+                    updateA.setAttribute("href", `meproductDetail.html?id=${data[i].id}`);
                     updateA.appendChild(updateSpan);
-
+                    
                     colUpdate.appendChild(updateA);
 
                     const colDelete = document.createElement("td");
                     const deleteSpan = document.createElement("span");
                     deleteSpan.classList.add("material-symbols-outlined");
-                    deleteSpan.style = "cursor:pointer";
+                    deleteSpan.style = "cursor:mouse";
                     deleteSpan.textContent = data[i].deleteField;
-                    deleteSpan.id = data[i].id;
-
                     deleteSpan.addEventListener("click", function (event) {
-                        deleteItem(deleteSpan.id);
+                        deleteItem(data[i].id);
+
                     }, false);
-
                     colDelete.appendChild(deleteSpan);
-
+                    
                     row.appendChild(colId);
                     row.appendChild(colIcon);
-                    row.appendChild(colName);
+                    row.appendChild(colDescription);
+                    row.appendChild(colPurchasePrice);
+                    row.appendChild(colSalePrice);
+                    row.appendChild(colStock);
+                    row.appendChild(colColor);
+                    row.appendChild(colSize);
+                    row.appendChild(colStatus);
                     row.appendChild(colUpdate);
                     row.appendChild(colDelete);
 
                     dataTable.appendChild(row);
                 }
             }
-
         }
         function cleanTable() {
             dataTable.innerHTML = "";
         }
-
-
-        async function deleteItem(idDeleteSpan){
-
-            const response = await fetch(`http://localhost:8080/api/${api}/${idDeleteSpan}`, {
+        async function deleteItem(id) {
+            console.log(id);
+            const response = await fetch(`http://localhost:8080/api/productDetail/${id}`, {
                 method: 'DELETE'
             });
             location.reload();
-        
         }
 
     </script>
-
 </body>
-
 </html>
