@@ -13,16 +13,13 @@
 
         <input type="text" id="iconField" placeholder="icono" />
         <input type="text" id="descriptionField" placeholder="Descripción" />
-        <input type="text" id="purchasePrice" placeholder="Precio de compra"/>
-        <input type="text" id="salePrice" placeholder="Precio de venta"/>
-        <input type="text" id="stock" placeholder="Stock"/>
-        <input type="text" id="urlImgField" placeholder="urlImg" />
+        <input type="text" id="purchasePriceField" placeholder="Precio de compra"/>
+        <input type="text" id="salePriceField" placeholder="Precio de venta"/>
+        <input type="text" id="stockField" placeholder="Stock" value="0" disabled="disabled"/>
 
         <select id="colorSelect"></select>
         <select id="sizeSelect"></select>
         <select id="statusSelect"></select>
-        <select id="productSelect"></select>
-
 
         <input type="text" id="updateField" placeholder="icono de edicion" />
         <input type="text" id="deleteField" placeholder="icono de eliminacion" />
@@ -30,9 +27,11 @@
     </fieldset>
 
 <script>
-        const redirectRoot = "mproductdetail.html"
+        const module = "mproductdetail.html"
         const urlSearchParams = new URLSearchParams(window.location.search);
+
         const id = urlSearchParams.get("id");
+        const action = urlSearchParams.get("action");
 
         let iconField = null;
         let nameField = null;
@@ -42,7 +41,6 @@
         let colorSelect = null;
         let sizeSelect = null;
         let statusSelect = null;
-        let productSelect = null;
 
         let updateField = null;
         let deleteField = null;
@@ -52,7 +50,7 @@
             const colorJSON = null;
             const sizeJSON = null;
             const statusJSON = null;
-            const productJSON = null;
+            const productDetailJSON = null;
 
             iconField = document.getElementById("iconField");
             nameField = document.getElementById("nameField");
@@ -62,7 +60,6 @@
             colorSelect = document.getElementById("colorSelect");
             sizeSelect = document.getElementById("sizeSelect");
             statusSelect = document.getElementById("statusSelect");
-            productSelect = document.getElementById("productSelect"); 
 
             updateField = document.getElementById("updateField");
             deleteField = document.getElementById("deleteField");
@@ -70,16 +67,15 @@
             colorLoadJSON();
             sizeLoadJSON();
             statusLoadJSON();
-            productLoadJSON();
 
-            if (id == null) {
+            if (action == "add")  {
                 titleLegend.textContent = "Agregar Detalle Producto";
                 document.getElementById("submitButton").addEventListener("click", save);
             }
 
             else {
                 titleLegend.textContent = "Actualizar Detalle Producto";
-                productByIdLoadJSON(id);
+                findByProductDetailIdLoadJSON(id);
                 document.getElementById("submitButton").addEventListener("click", update);
 
             }
@@ -97,6 +93,18 @@
                 console.log(error);
             }
         }
+        function colorContentLoaded(data) {
+            let option = document.createElement("option");
+            option.text = "Seleccione un color";
+            colorSelect.appendChild(option);
+
+            for (let i in colorJSON) {
+                option = null;
+                option = document.createElement("option");
+                option.text = colorJSON[i].name;
+                colorSelect.appendChild(option);
+            }
+        }
 
         async function sizeLoadJSON() {
             try {
@@ -107,6 +115,19 @@
             }
             catch (error) {
                 console.log(error);
+            }
+        }
+
+        function sizeContentLoaded(data) {
+            let option = document.createElement("option");
+            option.text = "Seleccione una talla";
+            sizeSelect.appendChild(option);
+
+            for (let i in sizeJSON) {
+                option = null;
+                option = document.createElement("option");
+                option.text = sizeJSON[i].name;
+                sizeSelect.appendChild(option);
             }
         }
 
@@ -124,49 +145,6 @@
             }
         }
 
-        async function productLoadJSON(id) {
-            try {
-                const response = await fetch(`http://localhost:8080/api/product/`);
-                const data = await response.json();
-                productJSON = data;
-                document.addEventListener("DOMContentLoaded", productContentLoaded(data));
-                //setFields(data);
-
-            }
-            catch (error) {
-                console.log(error);
-            }
-        }
-
-    
-
-        function colorContentLoaded(data) {
-            console.log(data);
-            let option = document.createElement("option");
-            option.text = "Seleccione un color";
-            colorSelect.appendChild(option);
-
-            for (let i in colorJSON) {
-                option = null;
-                option = document.createElement("option");
-                option.text = colorJSON[i].name;
-                colorSelect.appendChild(option);
-            }
-        }
-
-        function sizeContentLoaded(data) {
-            let option = document.createElement("option");
-            option.text = "Seleccione una talla";
-            sizeSelect.appendChild(option);
-
-            for (let i in sizeJSON) {
-                option = null;
-                option = document.createElement("option");
-                option.text = sizeJSON[i].name;
-                sizeSelect.appendChild(option);
-            }
-        }
-
         function statusContentLoaded(data) {
             let option = document.createElement("option");
             option.text = "Seleccione un status";
@@ -178,63 +156,109 @@
                 statusSelect.appendChild(option);
             }
         }
-        function productContentLoaded(data){
-            let option = document.createElement("option");
-            option.text = "Seleccione un producto";
-            productSelect.appendChild(option);
-            for (let i in productJSON) {
-                option = null;
-                option = document.createElement("option");
-                option.text = productJSON[i].name;
-                productSelect.appendChild(option);
+
+
+        async function findByProductDetailIdLoadJSON(id) {
+            try {
+                const response = await fetch(`http://localhost:8080/api/productDetail/${id}`);
+                const data = await response.json();
+                productDetailJSON = data;
+                document.addEventListener("DOMContentLoaded", productDetailContentLoaded(data));
+                
+
+            }
+            catch (error) {
+                console.log(error);
             }
         }
-        function update() {
-            console.log(id);
-            productByIdLoadJSON(id);
+
+        function productDetailContentLoaded(data){
+            setFields(data);
+        }
+
+        async function save() {
+            const data = {
+                "icon": `${document.getElementById("iconField").value}`,
+                "description": `${document.getElementById("descriptionField").value}`,
+                "purchasePrice" : `${document.getElementById("purchasePriceField").value}`,
+                "salePrice": `${document.getElementById("salePriceField").value}`,
+                "stock" : `${document.getElementById("stockField").value}`,
+                "color": {
+                    "id": `${document.getElementById("colorSelect").selectedIndex}`,
+                },
+                "size": {
+                    "id": `${document.getElementById("sizeSelect").selectedIndex}`
+                },
+                "product":{
+                    "id": `${id}`
+                },
+                "status": {
+                    "id": `${document.getElementById("statusSelect").selectedIndex}`
+                },
+                "updateField": `${document.getElementById("updateField").value}`,
+                "deleteField": `${document.getElementById("deleteField").value}`
+            }
+            try {
+                const response = await fetch(`http://localhost:8080/api/productDetail`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }
+                );
+            }
+            catch (error) {
+                console.log(error);
+            }
+
+            window.location.href = redirectRoot + `?id=${id}`;
 
         }
+
 
 
         function setFields(data) {
             iconField.value = data.icon;
-            nameField.value = data.name;
             descriptionField.value = data.description;
+            purchasePriceField.value = data.purchasePrice;
+            salePriceField.value = data.salePrice;
+            stockField.value = data.stock;
 
-            urlImgField.value = data.urlImg;
-
-            genderSelect.options[data.gender.id].selected = true;
-            categorySelect.options[data.category.id].selected = true;
-            materialTypeSelect.options[data.materialType.id].selected = true;
-
+            colorSelect.options[data.color.id].selected = true;
+            sizeSelect.options[data.size.id].selected = true;
+            statusSelect.options[data.status.id].selected = true;
             updateField.value = data.updateField;
             deleteField.value = data.deleteField;
         }
 
         async function update() {
-
             const data = {
-                "id": `${id}`,
-                "icon": `${iconField.value}`,
-                "name": `${nameField.value}`,
-                "description": `${descriptionField.value}`,
-                "urlImg": `${urlImgField.value}`,
-                "gender": {
-                    "id": `${genderSelect.selectedIndex}`,
+                "id" : `${id}`,
+                "icon": `${document.getElementById("iconField").value}`,
+                "description": `${document.getElementById("descriptionField").value}`,
+                "purchasePrice" : `${document.getElementById("purchasePriceField").value}`,
+                "salePrice": `${document.getElementById("salePriceField").value}`,
+                "stock" : `${document.getElementById("stockField").value}`,
+                "color": {
+                    "id": `${document.getElementById("colorSelect").selectedIndex}`,
                 },
-                "category": {
-                    "id": `${categorySelect.selectedIndex}`
+                "size": {
+                    "id": `${document.getElementById("sizeSelect").selectedIndex}`
                 },
-                "materialType": {
-                    "id": `${materialTypeSelect.selectedIndex}`
+                "product":{
+                    "id": `${productDetailJSON.product.id}`
                 },
-                "updateField": `${updateField.value}`,
-                "deleteField": `${deleteField.value}`
+                "status": {
+                    "id": `${document.getElementById("statusSelect").selectedIndex}`
+                },
+                "updateField": `${document.getElementById("updateField").value}`,
+                "deleteField": `${document.getElementById("deleteField").value}`
             }
 
 
             try {
-                const response = await fetch(`http://localhost:8080/api/product`, {
+                const response = await fetch(`http://localhost:8080/api/productDetail`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -246,44 +270,7 @@
             catch (error) {
                 console.log(error);
             }           
-            window.location.href = redirectRoot;
-        }
-        async function save() {
-            const data = {
-                "icon": `${document.getElementById("iconField").value}`,
-                "name": `${document.getElementById("nameField").value}`,
-                "description": `${document.getElementById("descriptionField").value}`,
-                "urlImg": `${document.getElementById("urlImgField").value}`,
-                "gender": {
-                    "id": `${document.getElementById("genderSelect").selectedIndex}`,
-                },
-                "category": {
-                    "id": `${document.getElementById("categorySelect").selectedIndex}`
-                },
-                "materialType": {
-                    "id": `${document.getElementById("materialTypeSelect").selectedIndex}`
-                },
-                "updateField": `${document.getElementById("updateField").value}`,
-                "deleteField": `${document.getElementById("deleteField").value}`
-            }
-
-
-            try {
-                const response = await fetch(`http://localhost:8080/api/product`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                }
-                );
-            }
-            catch (error) {
-                console.log(error);
-            }
-
-            window.location.href = redirectRoot;
-
+            window.location.href = module + `?id=${productDetailJSON.product.id}`;
         }
 
     </script>

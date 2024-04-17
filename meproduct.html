@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,9 +22,11 @@
         <select id="materialTypeSelect"></select>
 
 
+        <input type="text" id="iconAddProductDetailField" placeholder="icono detalle de producto">
         <input type="text" id="updateField" placeholder="icono de edicion" />
         <input type="text" id="deleteField" placeholder="icono de eliminacion" />
         <input type="submit" id="submitButton" />
+
     </fieldset>
     <script>
         const redirectRoot = "mproduct.html"
@@ -37,6 +40,7 @@
         let genderSelect = null;
         let categorySelect = null;
         let materialType = null;
+        let iconAddProductDetailField = null;
         let updateField = null;
         let deleteField = null;
 
@@ -52,6 +56,7 @@
             genderSelect = document.getElementById("genderSelect");
             categorySelect = document.getElementById("categorySelect");
             materialType = document.getElementById("materialType");
+            iconAddProductDetailField = document.getElementById("iconAddProductDetailField");
             updateField = document.getElementById("updateField");
             deleteField = document.getElementById("deleteField");
 
@@ -168,6 +173,8 @@
 
 
         function setFields(data) {
+
+            console.log(data);
             iconField.value = data.icon;
             nameField.value = data.name;
             descriptionField.value = data.description;
@@ -177,7 +184,8 @@
             genderSelect.options[data.gender.id].selected = true;
             categorySelect.options[data.category.id].selected = true;
             materialTypeSelect.options[data.materialType.id].selected = true;
-
+            console.log(data.iconAddProductDetail);
+            iconAddProductDetailField.value = data.iconAddProductDetail;
             updateField.value = data.updateField;
             deleteField.value = data.deleteField;
         }
@@ -199,10 +207,12 @@
                 "materialType": {
                     "id": `${materialTypeSelect.selectedIndex}`
                 },
+                "iconAddProductDetail" : `${iconAddProductDetailField.value}`,
                 "updateField": `${updateField.value}`,
                 "deleteField": `${deleteField.value}`
             }
 
+            console.log(data);
 
             try {
                 const response = await fetch(`http://localhost:8080/api/product`, {
@@ -234,9 +244,11 @@
                 "materialType": {
                     "id": `${document.getElementById("materialTypeSelect").selectedIndex}`
                 },
+                "iconAddProductDetail": `${document.getElementById("iconAddProductDetailField").value}`,
                 "updateField": `${document.getElementById("updateField").value}`,
                 "deleteField": `${document.getElementById("deleteField").value}`
             }
+            console.log(data);
 
 
             try {
@@ -253,7 +265,7 @@
                 console.log(error);
             }
 
-            window.location.href = redirectRoot;
+           window.location.href = redirectRoot;
 
         }
 

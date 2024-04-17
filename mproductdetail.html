@@ -13,11 +13,15 @@
 
 <body>
     <a href="#" onclick="history.back()">Regresar</a>
+    <div id="containerProduct">
+
+    </div>
     <fieldset>
         <legend>Buscar</legend>
         <input type="text" id="patternText" onkeyup="domContentLoad(dataJSON)" />
         <input type="submit" id="submitButton" />
     </fieldset>
+
     <table width="100%" id="dataTable">
         <tr>
             <td>Column Id</td>
@@ -32,9 +36,8 @@
             <td>Column Icon Delete</td>
         </tr>
     </table>
-    <div>
-        <a href="meproductdetail.html">
-        Agregar Detalle de Producto
+    
+    <div id="addDiv">
         <span class="material-symbols-outlined">
             add
         </span>
@@ -42,14 +45,30 @@
     </div>
     <script>
         const redirectRoot = "mproductdetail.html"
-        loadJSON();
         const urlSearchParams = new URLSearchParams(window.location.search);
         const filter = Boolean(urlSearchParams.get("filter"));
-        let dataJSON = null;
+        const id = urlSearchParams.get("id");        
+
+        const moduleEdit = "meproductdetail.html";
+
+        const addDiv = document.getElementById("addDiv");
+        const linkAdd = document.createElement("a");
         
+        linkAdd.href = moduleEdit +"?id="+ id + "&action=add";
+        linkAdd.textContent = "Agregar Elemento";
+        addDiv.appendChild(linkAdd);
+
+        loadJSON();
+
+        console.log(id);
+
+        let dataJSON = null;
+
+
+
         async function loadJSON() {
             try {
-                const response = await fetch("http://localhost:8080/api/productDetail/search/2");
+                const response = await fetch(`http://localhost:8080/api/productDetail/search/${id}`);
                 const data = await response.json();
                 dataJSON = data;
                 document.addEventListener("DOMContentLoaded", domContentLoad(data));
@@ -61,11 +80,14 @@
         function initComponents() {
             const dataTable = document.getElementById("dataTable");
             const patternText = document.getElementById("patternText");
+
         }
+
         function domContentLoad(data) {
             console.log(data);
             cleanTable();
             initComponents();
+            headerProduct();
             for (var i in data) {
 
                 if (JSON.stringify(data[i].description).includes(patternText.value) || patternText.value == "") {
@@ -118,12 +140,14 @@
                     const colDelete = document.createElement("td");
                     const deleteSpan = document.createElement("span");
                     deleteSpan.classList.add("material-symbols-outlined");
-                    deleteSpan.style = "cursor:mouse";
+                    deleteSpan.style.cursor = "pointer";
                     deleteSpan.textContent = data[i].deleteField;
-                    deleteSpan.addEventListener("click", function (event) {
-                        deleteItem(data[i].id);
+                    deleteSpan.id = data[i].id;
 
+                    deleteSpan.addEventListener("click", function (event) {
+                        deleteItem(deleteSpan.id);
                     }, false);
+
                     colDelete.appendChild(deleteSpan);
                     
                     row.appendChild(colId);
@@ -142,6 +166,28 @@
                 }
             }
         }
+
+        function headerProduct(){
+            const containerProduct = document.getElementById("containerProduct");
+
+            const image = document.createElement("img");
+            image.src = `assets/${dataJSON[0].product.urlImg}`;
+
+            const divName = document.createElement("div");
+            divName.textContent = `Nombre: ${dataJSON[0].product.name}`;
+            
+            const divDescription = document.createElement("div");
+            divDescription.textContent = `Descripción : ${dataJSON[0].product.description}`;
+        
+            const divGender = document.createElement("div");
+            divGender.textContent = `Genero : ${dataJSON[0].product.gender.name}`;
+            
+            containerProduct.appendChild(image);
+            containerProduct.appendChild(divName);
+            containerProduct.appendChild(divDescription);
+            containerProduct.appendChild(divGender);
+        }
+
         function cleanTable() {
             dataTable.innerHTML = "";
         }

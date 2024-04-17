@@ -28,6 +28,7 @@
             <td>Column eGender</td>
             <td>Column Id Category</td>
             <td>Column Id MaterialType</td>
+            <td>Column Icon DetailProduct</td>
             <td>Column Icon Update</td>
             <td>Column Icon Delete</td>
         </tr>
@@ -47,6 +48,7 @@
         const api = "product";
         const module = "mproduct.html";
         const moduleEdit = "meproduct.html";
+        const moduleIconAddProductDetail = "mproductdetail.html"
 
         loadJSON();
 
@@ -103,13 +105,20 @@
                     const colMaterialType = document.createElement("td");
                     colMaterialType.textContent = data[i].materialType.name;
 
+                    const colIconAddProductDetail = document.createElement("td");
+                    const iconAddProductDetailSpan = document.createElement("span");
+                    iconAddProductDetailSpan.classList.add("material-symbols-outlined");
+                    iconAddProductDetailSpan.textContent = data[i].iconAddProductDetail;
+                    const iconAddProductDetailA = document.createElement("a");
+                    iconAddProductDetailA.setAttribute("href", `${moduleIconAddProductDetail}?id=${data[i].id}`);
+                    iconAddProductDetailA.appendChild(iconAddProductDetailSpan);
+
+                    colIconAddProductDetail.appendChild(iconAddProductDetailA);
+
                     const colUpdate = document.createElement("td");
                     const updateSpan = document.createElement("span");
                     updateSpan.classList.add("material-symbols-outlined");
                     updateSpan.textContent = data[i].updateField;
-
-
-
                     const updateA = document.createElement("a");
                     updateA.setAttribute("href", `${moduleEdit}?id=${data[i].id}`);
                     updateA.appendChild(updateSpan);
@@ -119,7 +128,7 @@
                     const colDelete = document.createElement("td");
                     const deleteSpan = document.createElement("span");
                     deleteSpan.classList.add("material-symbols-outlined");
-                    deleteSpan.style = "cursor:pointer";
+                    deleteSpan.style.cursor = "pointer";
                     deleteSpan.textContent = data[i].deleteField;
                     deleteSpan.id = data[i].id;
 
@@ -137,6 +146,7 @@
                     row.appendChild(colEGender);
                     row.appendChild(colCategory);
                     row.appendChild(colMaterialType);
+                    row.appendChild(colIconAddProductDetail);
                     row.appendChild(colUpdate);
                     row.appendChild(colDelete);
 
