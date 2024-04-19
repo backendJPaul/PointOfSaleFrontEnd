@@ -12,7 +12,7 @@
     <fieldset>
         <legend id="titleLegend"></legend>
 
-        <input type="text" id="iconField" placeholder="icono" />
+        <input type="text" id="iconField" placeholder="icono" value="checkroom" disabled="disabled" />
         <input type="text" id="nameField" placeholder="nombre" />
         <input type="text" id="descriptionField" placeholder="description" />
         <input type="text" id="urlImgField" placeholder="urlImg" />
@@ -20,11 +20,11 @@
         <select id="genderSelect"></select>
         <select id="categorySelect"></select>
         <select id="materialTypeSelect"></select>
+        <select id="enterpriseSelect"></select>
 
-
-        <input type="text" id="iconAddProductDetailField" placeholder="icono detalle de producto">
-        <input type="text" id="updateField" placeholder="icono de edicion" />
-        <input type="text" id="deleteField" placeholder="icono de eliminacion" />
+        <input type="text" id="iconAddProductDetailField" placeholder="icono detalle de producto" value="add_circle" disabled="disabled">
+        <input type="text" id="updateField" placeholder="icono de edicion" value="update" disabled="disabled" >
+        <input type="text" id="deleteField" placeholder="icono de eliminacion" value="delete" disabled="disabled" />
         <input type="submit" id="submitButton" />
 
     </fieldset>
@@ -48,6 +48,7 @@
             const egenderJSON = null;
             const categoryJSON = null;
             const materialTypeJSON = null;
+            const entepriseJSON = null;
             
             iconField = document.getElementById("iconField");
             nameField = document.getElementById("nameField");
@@ -63,6 +64,7 @@
             egenderLoadJSON();
             categoryLoadJSON();
             materialTypeLoadJSON();
+            enterpriseLoadJSON();
 
             if (id == null) {
                 titleLegend.textContent = "Agregar Producto";
@@ -78,6 +80,16 @@
 
         }
 
+        async function enterpriseLoadJSON(){
+            try{
+                const response = await fetch("http://localhost:8080/api/enterprise");
+                const data = await response.json();
+                enterpriseJSON = data;
+                document.addEventListener("DOMContentLoaded",enterpriseContentLoaded(data));
+            }
+            catch(error){
+            }
+        }
 
         async function egenderLoadJSON() {
             try {
@@ -128,11 +140,24 @@
             }
         }
 
+        function enterpriseContentLoaded(data){
+            
+            let option = document.createElement("option");
+            option.text = "Seleccione un Provedor";
+            enterpriseSelect.appendChild(option);
+            for (let i in enterpriseJSON) {
+                option = null;
+                option = document.createElement("option");
+                option.text = enterpriseJSON[i].name;
+                enterpriseSelect.appendChild(option);
+            }
+        }
+
         function egenderContentLoaded(data) {
             let option = document.createElement("option");
             option.text = "Seleccione un genero";
             genderSelect.appendChild(option);
-
+            
             for (let i in egenderJSON) {
                 option = null;
                 option = document.createElement("option");
@@ -184,7 +209,7 @@
             genderSelect.options[data.gender.id].selected = true;
             categorySelect.options[data.category.id].selected = true;
             materialTypeSelect.options[data.materialType.id].selected = true;
-            console.log(data.iconAddProductDetail);
+      
             iconAddProductDetailField.value = data.iconAddProductDetail;
             updateField.value = data.updateField;
             deleteField.value = data.deleteField;
@@ -207,6 +232,9 @@
                 "materialType": {
                     "id": `${materialTypeSelect.selectedIndex}`
                 },
+                "enterprise":{
+                    "id": `${enterpriseSelect.selectedIndex}`
+                },
                 "iconAddProductDetail" : `${iconAddProductDetailField.value}`,
                 "updateField": `${updateField.value}`,
                 "deleteField": `${deleteField.value}`
@@ -227,7 +255,7 @@
             catch (error) {
                 console.log(error);
             }           
-            window.location.href = redirectRoot;
+          //  window.location.href = redirectRoot;
         }
         async function save() {
             const data = {
@@ -243,6 +271,9 @@
                 },
                 "materialType": {
                     "id": `${document.getElementById("materialTypeSelect").selectedIndex}`
+                },
+                "enterprise":{
+                    "id": `${document.getElementById("enterpriseSelect").selectedIndex}`
                 },
                 "iconAddProductDetail": `${document.getElementById("iconAddProductDetailField").value}`,
                 "updateField": `${document.getElementById("updateField").value}`,

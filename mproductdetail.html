@@ -122,9 +122,11 @@
                     const colSize = document.createElement("td");
                     colSize.textContent = data[i].size.name;
 
+                    const colLocation = document.createElement("td");
+                    colLocation.textContent = data[i].location.name;
+
                     const colStatus = document.createElement("td");
                     colStatus.textContent = data[i].status.name;
-
 
                     const colUpdate = document.createElement("td");
                     const updateSpan = document.createElement("span");
@@ -158,6 +160,7 @@
                     row.appendChild(colStock);
                     row.appendChild(colColor);
                     row.appendChild(colSize);
+                    row.appendChild(colLocation);
                     row.appendChild(colStatus);
                     row.appendChild(colUpdate);
                     row.appendChild(colDelete);

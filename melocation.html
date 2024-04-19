@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MELocation</title>
+</head>
+
+<body>
+    <a href="#" onclick="history.back()">Regresar</a>
+    <fieldset>
+        <legend id="titleLegend"></legend>
+        <input type="text" id="iconField" placeholder="icono" value="file_map" disabled="disabled"/>
+        
+        <select id="enterpriseSelect"></select>
+        
+        <input type="text" id="updateField" placeholder="icono de edicion" value="update" disabled="disabled"/>
+        <input type="text" id="deleteField" placeholder="icono de eliminacion" value="delete" disabled="disabled"/>
+        <input type="submit" id="submitButton" />
+    </fieldset>
+
+    <script>
+
+        const urlSearchParams = new URLSearchParams(window.location.search);
+        const id = urlSearchParams.get("id");
+
+        const api = "location";
+        const module = "mlocation.html";
+        const moduleEdit = "melocation.html";
+        const nameModule = "Ubicación";
+        
+        let dataJSON = null;
+        let enterpriseJSON = null;
+        
+        let iconField = document.getElementById("iconField");
+        let enterpriseSelect = document.getElementById("enterpriseSelect");
+        let updateField = document.getElementById("updateField");
+        let deleteField = document.getElementById("deleteField");
+
+        loadJSON();
+        enterpriseLoadJSON();
+        
+        async function loadJSON() {
+            try {
+                const response = await fetch(`http://localhost:8080/api/${api}`);
+                const data = await response.json();
+                dataJSON = data;
+                document.addEventListener("DOMContentLoaded", domContentLoad(data));
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+
+        function domContentLoad(data) {
+            cleanFields();
+            initComponents();
+        }
+        function initComponents() {
+
+            if (id == null) {
+                titleLegend.textContent = `Agregar ${nameModule}`;
+                document.getElementById("submitButton").addEventListener("click", save);
+            }
+                
+            else {
+                titleLegend.textContent = `Actualizar ${nameModule}`;
+                document.getElementById("submitButton").addEventListener("click", update);
+                for (let i in dataJSON) {
+                    if (dataJSON[i].id == id) {
+                        document.getElementById("iconField").value = dataJSON[i].icon;
+                        document.getElementById("enterpriseSelect").options[dataJSON[i].enterprise.id].selected = true;
+                        document.getElementById("updateField").value = dataJSON[i].updateField;
+                        document.getElementById("deleteField").value = dataJSON[i].deleteField;
+                    }
+                }
+            }
+        }
+
+
+        async function enterpriseLoadJSON(){
+            try{
+                const response = await fetch("http://localhost:8080/api/enterprise");
+                const data = await response.json();
+                enterpriseJSON = data;
+                document.addEventListener("DOMContentLoaded",enterpriseContentLoaded(data));
+            }
+            catch(error){
+            }
+        }
+        
+
+        function enterpriseContentLoaded(data){
+            let option = document.createElement("option");
+            option.text = "Seleccione Tienda";
+
+            enterpriseSelect.appendChild(option);
+
+            for (let i in enterpriseJSON) {
+                option = null;
+                option = document.createElement("option");
+                option.text = enterpriseJSON[i].name;
+                enterpriseSelect.appendChild(option);
+            }
+            
+        }
+
+        function cleanFields() {
+        }
+
+        async function save() {
+            const data = {
+                "icon": `${document.getElementById("iconField").value}`,
+                "enterprise" : {
+                    "id" : `${document.getElementById("enterpriseSelect").selectedIndex}`
+                },
+                "updateField": `${document.getElementById("updateField").value}`,
+                "deleteField": `${document.getElementById("deleteField").value}`
+            }
+            
+            console.log(data);
+            try {
+                const response = await fetch(`http://localhost:8080/api/${api}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                }
+                );
+            }
+            catch (error) {
+                console.log(error);
+            }
+            window.location.href = module;
+        }
+
+        async function update() {
+            const data = {
+                "id": `${id}`,
+                "icon": `${document.getElementById("iconField").value}`,
+                "enterprise": {
+                    "id" : `${document.getElementById("enterpriseSelect").selectedIndex}`
+                },
+                "updateField": `${document.getElementById("updateField").value}}`,
+                "deleteField": `${document.getElementById("deleteField").value}`
+            }
+            
+            const response = await fetch(`http://localhost:8080/api/${api}/${id}`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }
+            );
+            window.location.href = module;
+        }
+
+
+    </script>
+</body>
+
+</html>

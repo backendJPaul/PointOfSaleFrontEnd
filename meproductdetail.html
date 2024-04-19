@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,8 +10,8 @@
     <fieldset>
         <legend id="titleLegend"></legend>
 
-        <input type="text" id="iconField" placeholder="icono" />
-        <input type="text" id="descriptionField" placeholder="Descripción" />
+        <input type="text" id="iconField" placeholder="icono" value="checkroom" disabled="disabled"/>
+        <input type="text" id="descriptionField" placeholder="Descripción"/>
         <input type="text" id="purchasePriceField" placeholder="Precio de compra"/>
         <input type="text" id="salePriceField" placeholder="Precio de venta"/>
         <input type="text" id="stockField" placeholder="Stock" value="0" disabled="disabled"/>
@@ -21,8 +20,8 @@
         <select id="sizeSelect"></select>
         <select id="statusSelect"></select>
 
-        <input type="text" id="updateField" placeholder="icono de edicion" />
-        <input type="text" id="deleteField" placeholder="icono de eliminacion" />
+        <input type="text" id="updateField" placeholder="icono de edicion" value="update" disabled="disabled"/>
+        <input type="text" id="deleteField" placeholder="icono de eliminacion" value="delete" disabled="disabled"/>
         <input type="submit" id="submitButton" />
     </fieldset>
 
@@ -77,10 +76,7 @@
                 titleLegend.textContent = "Actualizar Detalle Producto";
                 findByProductDetailIdLoadJSON(id);
                 document.getElementById("submitButton").addEventListener("click", update);
-
             }
-
-
         }
         async function colorLoadJSON() {
             try {
@@ -211,12 +207,8 @@
             catch (error) {
                 console.log(error);
             }
-
             window.location.href = redirectRoot + `?id=${id}`;
-
         }
-
-
 
         function setFields(data) {
             iconField.value = data.icon;
