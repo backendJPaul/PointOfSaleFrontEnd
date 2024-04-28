@@ -209,13 +209,15 @@
             genderSelect.options[data.gender.id].selected = true;
             categorySelect.options[data.category.id].selected = true;
             materialTypeSelect.options[data.materialType.id].selected = true;
-      
+            enterpriseSelect.options[data.enterprise.id].selected = true;
+            
             iconAddProductDetailField.value = data.iconAddProductDetail;
             updateField.value = data.updateField;
             deleteField.value = data.deleteField;
         }
 
         async function update() {
+            console.log("data");
 
             const data = {
                 "id": `${id}`,
@@ -243,8 +245,8 @@
             console.log(data);
 
             try {
-                const response = await fetch(`http://localhost:8080/api/product`, {
-                    method: 'POST',
+                const response = await fetch(`http://localhost:8080/api/product/${id}`, {
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
